@@ -49,6 +49,10 @@ echo auth_statusbar_bottom([
 // die keine URL-Navigation sind).
 echo auth_statusbar_top([
     'title' => 'HTML-Startseite',
+    // leftItems: am linken Rand der Leiste (z.B. ein "Zurück"), unabhaengig von items.
+    'leftItems' => [
+        ['type' => 'button', 'label' => 'Zurück', 'icon' => 'arrow-left', 'id' => 'authTopBack'],
+    ],
     'items' => [
         ['type' => 'link', 'label' => 'Konfiguration', 'href' => $menuBuilderUrl, 'icon' => 'gear'],
         ['type' => 'button', 'label' => 'Download JSON', 'icon' => 'download', 'id' => 'authTopDownloadJson'],

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/icons.php';
 
-const AUTH_STATUSBAR_VERSION = '1.2.0';
+const AUTH_STATUSBAR_VERSION = '1.3.0';
 
 if (!function_exists('auth_statusbar_e')) {
     function auth_statusbar_e(string $value): string
@@ -177,8 +177,12 @@ if (!function_exists('auth_statusbar_top')) {
      * Obere, anwendungsspezifische Leiste. Gleiche Optik/Position wie die untere Leiste,
      * Inhalt wird komplett vom Aufrufer bestimmt.
      *
+     * leftItems rendert am linken Rand der Leiste (z.B. ein "Zurück"), items wie bisher
+     * rechtsbündig. Beide nutzen dasselbe Item-Schema.
+     *
      * @param array{
      *   title?: ?string,
+     *   leftItems?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool}>,
      *   items?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool}>,
      *   reserveSpace?: bool
      * } $ctx
@@ -186,12 +190,22 @@ if (!function_exists('auth_statusbar_top')) {
     function auth_statusbar_top(array $ctx): string
     {
         $title = $ctx['title'] ?? null;
+        $leftItems = $ctx['leftItems'] ?? [];
         $items = $ctx['items'] ?? [];
         $reserveSpace = $ctx['reserveSpace'] ?? true;
 
-        if (empty($title) && empty($items)) {
+        if (empty($title) && empty($leftItems) && empty($items)) {
             return '';
         }
+
+        $leftItemsHtml = '';
+        foreach ($leftItems as $item) {
+            $leftItemsHtml .= auth_statusbar_top_item($item);
+        }
+
+        $leftActions = $leftItemsHtml !== ''
+            ? '<nav class="auth-sb__actions auth-sb__actions--left" aria-label="Zurück">' . $leftItemsHtml . '</nav>'
+            : '';
 
         $titleHtml = !empty($title)
             ? '<span class="auth-sb__title">' . auth_statusbar_e((string) $title) . '</span>'
@@ -207,7 +221,7 @@ if (!function_exists('auth_statusbar_top')) {
             : '';
 
         $html = '<div class="auth-sb auth-sb--top" role="navigation" aria-label="Anwendungsfunktionen">'
-            . '<div class="auth-sb__inner">' . $titleHtml . $actions . '</div>'
+            . '<div class="auth-sb__inner">' . $leftActions . $titleHtml . $actions . '</div>'
             . '</div>';
 
         if ($reserveSpace) {

@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.3.0
+
+- Obere Leiste: neuer optionaler `leftItems`-Schlüssel für `auth_statusbar_top()` — rendert
+  Items am linken Rand der Leiste (z.B. ein "Zurück"), unabhängig vom rechtsbündigen `items`-Slot.
+  Neue CSS-Klasse `.auth-sb__actions--left`.
+
 ## v1.2.0
 
 - Icon-Set erweitert um `printer`, `trash`, `arrow-left`.
