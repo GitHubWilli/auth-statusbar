@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/icons.php';
 
-const AUTH_STATUSBAR_VERSION = '1.1.0';
+const AUTH_STATUSBAR_VERSION = '1.2.0';
 
 if (!function_exists('auth_statusbar_e')) {
     function auth_statusbar_e(string $value): string
