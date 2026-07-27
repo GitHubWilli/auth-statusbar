@@ -66,7 +66,7 @@ Details zu allen Parametern stehen als PHPDoc direkt in `src/statusbar.php`.
 1. Alle Texte/URLs werden intern escaped (`htmlspecialchars(..., ENT_QUOTES, 'UTF-8')`) — kein Parameter
    akzeptiert rohes HTML.
 2. Icons nur über feste Keys aus `src/icons.php` (`users`, `profile`, `logout`, `gear`, `tag`, `play`,
-   `download`, `upload`). Unbekannter Key → kein Icon, kein Fehler.
+   `download`, `upload`, `printer`, `trash`, `arrow-left`). Unbekannter Key → kein Icon, kein Fehler.
 3. "Falls Admin"/"falls relevant" entscheidet ausschließlich der Aufrufer — die Komponente rendert
    `usersUrl` genau dann als Link, wenn er nicht leer ist. Rollenlogik bleibt in der jeweiligen App.
 4. Alle Funktionen sind `function_exists()`-geschützt, doppelte `require`-Pfade sind ungefährlich.

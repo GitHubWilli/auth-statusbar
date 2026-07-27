@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.0
+
+- Icon-Set erweitert um `printer`, `trash`, `arrow-left`.
+
 ## v1.1.0
 
 - Obere Leiste: neuer Item-`type: 'button'` (rendert `<button type="button">` statt `<a>`) für
