@@ -83,6 +83,11 @@
     margin-left: auto;
 }
 
+.auth-sb__actions--left {
+    margin-left: 0;
+    margin-right: auto;
+}
+
 .auth-sb__link {
     display: inline-flex;
     align-items: center;
