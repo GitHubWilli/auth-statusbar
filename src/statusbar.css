@@ -1,0 +1,151 @@
+:root {
+    --auth-sb-h: 40px;
+    --auth-sb-top-h: 40px;
+    --auth-sb-bg: #1f2937;
+    --auth-sb-fg: #e5e7eb;
+    --auth-sb-border: rgba(255, 255, 255, 0.12);
+    --auth-sb-hover: rgba(255, 255, 255, 0.12);
+    --auth-sb-focus: #60a5fa;
+    --auth-sb-badge-bg: rgba(255, 255, 255, 0.14);
+}
+
+.auth-sb {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 2147480000;
+    height: var(--auth-sb-h);
+    box-sizing: border-box;
+    font: 400 13px/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--auth-sb-bg);
+    color: var(--auth-sb-fg);
+}
+
+.auth-sb--bottom {
+    bottom: 0;
+    border-top: 1px solid var(--auth-sb-border);
+}
+
+.auth-sb--top {
+    top: 0;
+    height: var(--auth-sb-top-h);
+    border-bottom: 1px solid var(--auth-sb-border);
+}
+
+.auth-sb__inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 12px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.auth-sb__identity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.auth-sb__user {
+    font-weight: 600;
+    max-width: 40vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.auth-sb__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--auth-sb-badge-bg);
+    font-size: 0.85em;
+    white-space: nowrap;
+}
+
+.auth-sb__title {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.auth-sb__actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.auth-sb__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+}
+
+.auth-sb__link:hover,
+.auth-sb__link:focus-visible {
+    background: var(--auth-sb-hover);
+}
+
+.auth-sb__link:focus-visible {
+    outline: 2px solid var(--auth-sb-focus);
+    outline-offset: 1px;
+}
+
+.auth-sb__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+/* Platzreservierung, per Inline-Script auf <body> gesetzt */
+body.auth-sb-space-bottom {
+    padding-bottom: var(--auth-sb-h) !important;
+}
+
+body.auth-sb-space-top {
+    padding-top: var(--auth-sb-top-h) !important;
+}
+
+/* Schmale Screens: Text-Labels verstecken, Icons bleiben */
+@media (max-width: 560px) {
+    .auth-sb__link-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    .auth-sb__user {
+        max-width: 35vw;
+    }
+}
+
+@media print {
+    .auth-sb {
+        display: none !important;
+    }
+
+    body.auth-sb-space-bottom,
+    body.auth-sb-space-top {
+        padding-bottom: 0 !important;
+        padding-top: 0 !important;
+    }
+}
