@@ -56,6 +56,14 @@ echo auth_statusbar_top([
     'items' => [
         ['type' => 'link', 'label' => 'Konfiguration', 'href' => $menuBuilderUrl, 'icon' => 'gear'],
         ['type' => 'button', 'label' => 'Download JSON', 'icon' => 'download', 'id' => 'authTopDownloadJson'],
+        // type "select": <form>+<select>, submitted automatisch bei Aenderung (z.B. Mandanten-Umschalter).
+        // hidden ist eine reine name=>value-Map (Klartext, z.B. CSRF-Token) - kein roher HTML-Parameter.
+        [
+            'type' => 'select', 'name' => 'clientId', 'formAction' => '/api/set-client.php',
+            'options' => [['value' => 'buero', 'label' => 'buero'], ['value' => 'lager', 'label' => 'lager']],
+            'selected' => 'buero', 'label' => 'Client', 'icon' => 'tag',
+            'hidden' => ['csrf_token' => $csrfToken],
+        ],
     ],
 ]);
 

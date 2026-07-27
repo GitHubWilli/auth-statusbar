@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/icons.php';
 
-const AUTH_STATUSBAR_VERSION = '1.3.0';
+const AUTH_STATUSBAR_VERSION = '1.4.0';
 
 if (!function_exists('auth_statusbar_e')) {
     function auth_statusbar_e(string $value): string
@@ -29,6 +29,27 @@ if (!function_exists('auth_statusbar_link')) {
     }
 }
 
+if (!function_exists('auth_statusbar_autosubmit_script')) {
+    /**
+     * Einmalig emittierter, delegierter change-Listener fuer type "select" Items.
+     * Delegiert auf document, damit er auch nach preg_replace-Injektion hinter
+     * <body> zuverlaessig greift (das select existiert zu dem Zeitpunkt bereits).
+     */
+    function auth_statusbar_autosubmit_script(): string
+    {
+        static $emitted = false;
+        if ($emitted) {
+            return '';
+        }
+        $emitted = true;
+
+        return '<script>document.addEventListener("change",function(e){'
+            . 'var s=e.target;'
+            . 'if(s&&s.matches&&s.matches("select[data-auth-sb-autosubmit]")&&s.form){s.form.submit();}'
+            . '},true);</script>';
+    }
+}
+
 if (!function_exists('auth_statusbar_top_item')) {
     /**
      * Rendert ein einzelnes Item der oberen, anwendungsspezifischen Leiste.
@@ -38,7 +59,19 @@ if (!function_exists('auth_statusbar_top_item')) {
      * anhaengen kann (z.B. fuer JS-Aktionen wie Download/Import, die keine
      * URL-Navigation sind). Die Komponente selbst kennt kein onclick.
      *
-     * @param array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool} $item
+     * type "select" rendert ein <form> mit <select>, das bei Aenderung
+     * automatisch abgeschickt wird (z.B. ein Mandanten-/Bereichs-Umschalter
+     * direkt in der Leiste). hidden ist eine reine name=>value-Map (Klartext,
+     * z.B. CSRF-Token, Ruecksprung-URL) - kein roher HTML-Parameter, alles
+     * wird escaped.
+     *
+     * @param array{
+     *   type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string,
+     *   id?: ?string, accent?: bool,
+     *   name?: string, formAction?: string, method?: string,
+     *   options?: list<array{value: string, label: string}>, selected?: ?string,
+     *   hidden?: array<string,string>
+     * } $item
      */
     function auth_statusbar_top_item(array $item): string
     {
@@ -50,12 +83,52 @@ if (!function_exists('auth_statusbar_top_item')) {
         $accentClass = !empty($item['accent']) ? ' auth-sb__link--accent' : '';
         $idAttr = $id !== '' ? ' id="' . auth_statusbar_e($id) . '"' : '';
 
+        $icon = $iconKey !== '' ? auth_statusbar_icon($iconKey) : '';
+        $iconHtml = $icon !== '' ? '<span class="auth-sb__icon" aria-hidden="true">' . $icon . '</span>' : '';
+
+        if ($type === 'select') {
+            $name = (string) ($item['name'] ?? '');
+            $formAction = (string) ($item['formAction'] ?? '');
+            $method = (string) ($item['method'] ?? 'post');
+            $options = $item['options'] ?? [];
+            $selected = $item['selected'] ?? null;
+            $hidden = $item['hidden'] ?? [];
+
+            if ($name === '' || $formAction === '' || $options === []) {
+                return '';
+            }
+
+            $hiddenHtml = '';
+            foreach ($hidden as $hiddenName => $hiddenValue) {
+                $hiddenHtml .= '<input type="hidden" name="' . auth_statusbar_e((string) $hiddenName)
+                    . '" value="' . auth_statusbar_e((string) $hiddenValue) . '">';
+            }
+
+            $optionsHtml = '';
+            foreach ($options as $option) {
+                $value = (string) ($option['value'] ?? '');
+                $optionLabel = (string) ($option['label'] ?? $value);
+                $selectedAttr = $selected !== null && $value === (string) $selected ? ' selected' : '';
+                $optionsHtml .= '<option value="' . auth_statusbar_e($value) . '"' . $selectedAttr . '>'
+                    . auth_statusbar_e($optionLabel) . '</option>';
+            }
+
+            $labelHtml = $label !== ''
+                ? '<span class="auth-sb__link-label auth-sb__select-label">' . auth_statusbar_e($label) . '</span>'
+                : '';
+
+            return '<form class="auth-sb__form" method="' . auth_statusbar_e($method) . '" action="' . auth_statusbar_e($formAction) . '">'
+                . $hiddenHtml . $iconHtml . $labelHtml
+                . '<select class="auth-sb__select"' . $idAttr . ' name="' . auth_statusbar_e($name) . '"'
+                . ' aria-label="' . auth_statusbar_e($title) . '" title="' . auth_statusbar_e($title) . '" data-auth-sb-autosubmit>'
+                . $optionsHtml . '</select>'
+                . '<noscript><button type="submit" class="auth-sb__link">OK</button></noscript>'
+                . '</form>' . auth_statusbar_autosubmit_script();
+        }
+
         if ($label === '') {
             return '';
         }
-
-        $icon = $iconKey !== '' ? auth_statusbar_icon($iconKey) : '';
-        $iconHtml = $icon !== '' ? '<span class="auth-sb__icon" aria-hidden="true">' . $icon . '</span>' : '';
 
         if ($type === 'badge') {
             return '<span class="auth-sb__badge' . $accentClass . '"' . $idAttr . '>' . $iconHtml . auth_statusbar_e($label) . '</span>';
@@ -182,8 +255,8 @@ if (!function_exists('auth_statusbar_top')) {
      *
      * @param array{
      *   title?: ?string,
-     *   leftItems?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool}>,
-     *   items?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool}>,
+     *   leftItems?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool, name?: string, formAction?: string, method?: string, options?: list<array{value: string, label: string}>, selected?: ?string, hidden?: array<string,string>}>,
+     *   items?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool, name?: string, formAction?: string, method?: string, options?: list<array{value: string, label: string}>, selected?: ?string, hidden?: array<string,string>}>,
      *   reserveSpace?: bool
      * } $ctx
      */

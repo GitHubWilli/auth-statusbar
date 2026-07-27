@@ -81,6 +81,34 @@ $frames = [
         ],
         'Beispiel für ein App-spezifisches Badge (z.B. aktive Client-ID) in der oberen Leiste.'
     ),
+    'Admin mit Client-Dropdown' => auth_statusbar_demo_frame(
+        [
+            'username' => 'willi',
+            'roleLabel' => 'Admin',
+            'usersUrl' => '#users',
+            'profileUrl' => '#profile',
+            'logoutUrl' => '#logout',
+        ],
+        [
+            'title' => 'Checklisten',
+            'items' => [
+                [
+                    'type' => 'select',
+                    'name' => 'clientId',
+                    'formAction' => '#',
+                    'options' => [
+                        ['value' => 'acme-gmbh', 'label' => 'acme-gmbh'],
+                        ['value' => 'beta-ag', 'label' => 'beta-ag'],
+                    ],
+                    'selected' => 'acme-gmbh',
+                    'label' => 'Client',
+                    'icon' => 'tag',
+                    'hidden' => ['csrf_token' => 'demo-token'],
+                ],
+            ],
+        ],
+        'Client-Umschalter als Inline-Dropdown: Auswahl aendern submitted automatisch.'
+    ),
     'Schmaler Viewport (< 560px)' => auth_statusbar_demo_frame(
         [
             'username' => 'willi',
@@ -110,7 +138,7 @@ $frames = [
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         .frame-card h2 { font-size: 0.95rem; margin: 0 0 8px; }
         iframe { width: 100%; height: 340px; border: 1px solid #cbd5e1; border-radius: 8px; }
-        .frame-card:nth-child(4) iframe { width: 380px; }
+        .frame-card:nth-child(5) iframe { width: 380px; }
     </style>
 </head>
 <body>

@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.4.0
+
+- Obere Leiste: neuer Item-`type: 'select'` — rendert ein `<form>` mit `<select>`, das bei
+  Auswahländerung automatisch abgeschickt wird (z.B. ein Mandanten-/Bereichs-Umschalter direkt in
+  der Leiste statt eines Umwegs über eine Profilseite).
+  Schlüssel: `name`, `formAction`, `method` (default `post`), `options` (Liste aus `value`/`label`),
+  `selected`, `hidden` (Map `name => value`, z.B. CSRF-Token, Rücksprung-URL — Klartext, kein rohes
+  HTML), zusätzlich die bekannten `label`, `title`, `icon`, `id`.
+- Ohne JavaScript bleibt das Formular über einen `<noscript>`-Submit-Button bedienbar.
+- Neue CSS-Klassen `.auth-sb__form`, `.auth-sb__select`, `.auth-sb__select-label`.
+
 ## v1.3.0
 
 - Obere Leiste: neuer optionaler `leftItems`-Schlüssel für `auth_statusbar_top()` — rendert
