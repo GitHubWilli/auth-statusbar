@@ -118,6 +118,57 @@
     flex-shrink: 0;
 }
 
+.auth-sb__form {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 10px;
+    border: 0;
+    background: none;
+}
+
+.auth-sb__select-label {
+    color: inherit;
+    opacity: 0.75;
+}
+
+.auth-sb__select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 2px 20px 2px 4px;
+    border: none;
+    border-radius: 6px;
+    background-color: transparent;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='12' height='12' fill='none' stroke='%23e5e7eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 4px center;
+    color: inherit;
+    font: inherit;
+    line-height: 1.4;
+    cursor: pointer;
+    max-width: 40vw;
+    text-overflow: ellipsis;
+}
+
+.auth-sb__select:hover,
+.auth-sb__select:focus-visible {
+    background-color: var(--auth-sb-hover);
+}
+
+.auth-sb__select:focus-visible {
+    outline: 2px solid var(--auth-sb-focus);
+    outline-offset: 1px;
+}
+
+/* Das native Dropdown-Popup ist hell, die Leiste selbst dunkel - Optionen
+   brauchen daher eine eigene, dunkle Textfarbe statt "color: inherit". */
+.auth-sb__select option {
+    color: #1f2937;
+    background: #ffffff;
+}
+
 /* Platzreservierung, per Inline-Script auf <body> gesetzt */
 body.auth-sb-space-bottom {
     padding-bottom: var(--auth-sb-h) !important;
