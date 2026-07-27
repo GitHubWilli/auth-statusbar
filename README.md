@@ -44,10 +44,14 @@ echo auth_statusbar_bottom([
 ]);
 
 // Obere Leiste (anwendungsspezifisch) — gleiche Optik, freier Inhalt.
+// type "button" statt "link": kein href, dafuer eine (optionale) id, an die
+// die App per JS einen eigenen Klick-Handler haengt (z.B. fuer Download/Import,
+// die keine URL-Navigation sind).
 echo auth_statusbar_top([
     'title' => 'HTML-Startseite',
     'items' => [
         ['type' => 'link', 'label' => 'Konfiguration', 'href' => $menuBuilderUrl, 'icon' => 'gear'],
+        ['type' => 'button', 'label' => 'Download JSON', 'icon' => 'download', 'id' => 'authTopDownloadJson'],
     ],
 ]);
 
@@ -61,8 +65,8 @@ Details zu allen Parametern stehen als PHPDoc direkt in `src/statusbar.php`.
 
 1. Alle Texte/URLs werden intern escaped (`htmlspecialchars(..., ENT_QUOTES, 'UTF-8')`) — kein Parameter
    akzeptiert rohes HTML.
-2. Icons nur über feste Keys aus `src/icons.php` (`users`, `profile`, `logout`, `gear`, `tag`). Unbekannter
-   Key → kein Icon, kein Fehler.
+2. Icons nur über feste Keys aus `src/icons.php` (`users`, `profile`, `logout`, `gear`, `tag`, `play`,
+   `download`, `upload`). Unbekannter Key → kein Icon, kein Fehler.
 3. "Falls Admin"/"falls relevant" entscheidet ausschließlich der Aufrufer — die Komponente rendert
    `usersUrl` genau dann als Link, wenn er nicht leer ist. Rollenlogik bleibt in der jeweiligen App.
 4. Alle Funktionen sind `function_exists()`-geschützt, doppelte `require`-Pfade sind ungefährlich.

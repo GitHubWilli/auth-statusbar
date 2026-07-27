@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/icons.php';
 
-const AUTH_STATUSBAR_VERSION = '1.0.0';
+const AUTH_STATUSBAR_VERSION = '1.1.0';
 
 if (!function_exists('auth_statusbar_e')) {
     function auth_statusbar_e(string $value): string
@@ -33,7 +33,12 @@ if (!function_exists('auth_statusbar_top_item')) {
     /**
      * Rendert ein einzelnes Item der oberen, anwendungsspezifischen Leiste.
      *
-     * @param array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, accent?: bool} $item
+     * type "button" rendert ein echtes <button type="button">, damit die
+     * einbindende App per (optionaler) id einen eigenen Klick-Handler
+     * anhaengen kann (z.B. fuer JS-Aktionen wie Download/Import, die keine
+     * URL-Navigation sind). Die Komponente selbst kennt kein onclick.
+     *
+     * @param array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool} $item
      */
     function auth_statusbar_top_item(array $item): string
     {
@@ -41,7 +46,9 @@ if (!function_exists('auth_statusbar_top_item')) {
         $label = (string) ($item['label'] ?? '');
         $title = (string) ($item['title'] ?? $label);
         $iconKey = (string) ($item['icon'] ?? '');
+        $id = (string) ($item['id'] ?? '');
         $accentClass = !empty($item['accent']) ? ' auth-sb__link--accent' : '';
+        $idAttr = $id !== '' ? ' id="' . auth_statusbar_e($id) . '"' : '';
 
         if ($label === '') {
             return '';
@@ -51,20 +58,25 @@ if (!function_exists('auth_statusbar_top_item')) {
         $iconHtml = $icon !== '' ? '<span class="auth-sb__icon" aria-hidden="true">' . $icon . '</span>' : '';
 
         if ($type === 'badge') {
-            return '<span class="auth-sb__badge' . $accentClass . '">' . $iconHtml . auth_statusbar_e($label) . '</span>';
+            return '<span class="auth-sb__badge' . $accentClass . '"' . $idAttr . '>' . $iconHtml . auth_statusbar_e($label) . '</span>';
         }
 
         if ($type === 'text') {
-            return '<span class="auth-sb__title' . $accentClass . '">' . $iconHtml . auth_statusbar_e($label) . '</span>';
+            return '<span class="auth-sb__title' . $accentClass . '"' . $idAttr . '>' . $iconHtml . auth_statusbar_e($label) . '</span>';
+        }
+
+        if ($type === 'button') {
+            return '<button type="button" class="auth-sb__link' . $accentClass . '"' . $idAttr . ' title="' . auth_statusbar_e($title) . '">'
+                . $iconHtml . '<span class="auth-sb__link-label">' . auth_statusbar_e($label) . '</span></button>';
         }
 
         $href = (string) ($item['href'] ?? '');
         if ($href === '') {
-            return '<span class="auth-sb__link' . $accentClass . '" title="' . auth_statusbar_e($title) . '">'
+            return '<span class="auth-sb__link' . $accentClass . '"' . $idAttr . ' title="' . auth_statusbar_e($title) . '">'
                 . $iconHtml . '<span class="auth-sb__link-label">' . auth_statusbar_e($label) . '</span></span>';
         }
 
-        return '<a class="auth-sb__link' . $accentClass . '" href="' . auth_statusbar_e($href) . '" title="' . auth_statusbar_e($title) . '">'
+        return '<a class="auth-sb__link' . $accentClass . '"' . $idAttr . ' href="' . auth_statusbar_e($href) . '" title="' . auth_statusbar_e($title) . '">'
             . $iconHtml . '<span class="auth-sb__link-label">' . auth_statusbar_e($label) . '</span></a>';
     }
 }
@@ -167,7 +179,7 @@ if (!function_exists('auth_statusbar_top')) {
      *
      * @param array{
      *   title?: ?string,
-     *   items?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, accent?: bool}>,
+     *   items?: list<array{type?: string, label: string, href?: ?string, title?: ?string, icon?: ?string, id?: ?string, accent?: bool}>,
      *   reserveSpace?: bool
      * } $ctx
      */
