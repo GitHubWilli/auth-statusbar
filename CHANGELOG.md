@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.0
+
+- Icon-Set erweitert um `search`, `edit`, `view`, `rename`, `cancel`, `save`, `live` — deckt die
+  gaengigen Aktionen (Suchen, Bearbeiten, Ansehen/Details, Umbenennen, Abbrechen, Speichern,
+  Live-Ansicht starten) einheitlich mit Lucide-Icons ab, damit einbindende Apps dafuer nicht mehr
+  auf Emojis oder andere Icon-Quellen ausweichen muessen.
+
 ## v1.4.0
 
 - Obere Leiste: neuer Item-`type: 'select'` — rendert ein `<form>` mit `<select>`, das bei
