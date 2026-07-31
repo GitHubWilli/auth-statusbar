@@ -79,7 +79,7 @@ Details zu allen Parametern stehen als PHPDoc direkt in `src/statusbar.php`.
    akzeptiert rohes HTML.
 2. Icons nur über feste Keys aus `src/icons.php` (`users`, `profile`, `logout`, `gear`, `tag`, `play`,
    `download`, `upload`, `printer`, `trash`, `arrow-left`, `search`, `edit`, `view`, `rename`, `cancel`,
-   `save`, `live`). Unbekannter Key → kein Icon, kein Fehler. Alle Icons sind Lucide-Icons (Strichstärke 2,
+   `save`, `live`, `lock`, `unlock`). Unbekannter Key → kein Icon, kein Fehler. Alle Icons sind Lucide-Icons (Strichstärke 2,
    als Inline-SVG ohne externe Abhängigkeit) — neue Icons sollten sich an diesem Stil orientieren, damit
    das Erscheinungsbild über alle einbindenden Apps hinweg einheitlich bleibt.
 3. "Falls Admin"/"falls relevant" entscheidet ausschließlich der Aufrufer — die Komponente rendert
