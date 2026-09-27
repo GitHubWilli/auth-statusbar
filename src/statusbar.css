@@ -194,6 +194,20 @@ body.auth-sb-space-top {
     }
 }
 
+/* Handy/Tablet: Leisten 48 px, Symbole als 44-px-Tippflaechen */
+@media (max-width: 768px) {
+    :root {
+        --auth-sb-h: 48px;
+        --auth-sb-top-h: 48px;
+    }
+
+    .auth-sb__link {
+        min-width: 44px;
+        min-height: 44px;
+        justify-content: center;
+    }
+}
+
 @media print {
     .auth-sb {
         display: none !important;

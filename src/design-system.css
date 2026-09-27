@@ -1,0 +1,496 @@
+/*
+ * Gemeinsames Design-System aller DAS-DA-Web-Apps (Checklisten, Startseite,
+ * Wochendisposition, Systeminfo-Tool). Wird per auth_design_system_head()
+ * inline in jede geschuetzte App-Seite eingebunden.
+ * Fluent/WinUI-Konventionen: Button-Reihenfolge (primär links, Abbrechen
+ * außen rechts), Default-Button-Hervorhebung, Modal/Toast-Komponenten,
+ * einheitliches Spacing-Raster, Tippflächen am Handy mindestens 44 px.
+ */
+
+:root {
+    color-scheme: only light;
+    /* Spacing-Raster (4px-Basis) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+
+    --radius-sm: 6px;
+    --radius-md: 9px;
+    --radius-lg: 12px;
+    --radius-xl: 14px;
+
+    --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.18);
+    --shadow-modal: 0 24px 70px rgba(0, 0, 0, 0.35);
+
+    /* DAS-DA-Farbwelt */
+    --brand: #009EE0;
+    --brand-hover: #0088c7;
+    --brand-dark: #001931;
+    --brand-light: #e6f5fc;
+    --font-ui: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --tap-min: 44px;
+
+    /* Farbtokens (Namen aus den bestehenden Apps übernommen) */
+    --color-primary: #009EE0;
+    --color-danger: #f44336;
+    --color-success: #4CAF50;
+    --border-color: #ddd;
+
+    --btn-primary: #009EE0;
+    --btn-secondary: #FFFFFF;
+    --btn-success: #4CAF50;
+    --btn-danger: #d32f2f;
+    --btn-info: #2196F3;
+    --btn-disabled: #cccccc;
+    --btn-primary-hover: #0088c7;
+    --btn-success-hover: #45a049;
+    --btn-danger-hover: #a91f1f;
+    --btn-info-hover: #0b7dda;
+
+    --text-body: #1c2430;
+    --text-muted: #526173;
+}
+
+/* ===== Buttons ===== */
+.btn {
+    padding: var(--space-2) var(--space-3);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.05s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    line-height: 1;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background: var(--btn-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--btn-primary-hover);
+    box-shadow: 0 5px 15px rgba(0, 158, 224, 0.3);
+}
+
+.btn-secondary {
+    background: var(--btn-secondary);
+    color: #333;
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+}
+
+.btn-danger {
+    background: var(--btn-danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: var(--btn-danger-hover);
+}
+
+.btn-success {
+    background: var(--btn-success);
+    color: white;
+}
+
+.btn-success:hover {
+    background: var(--btn-success-hover);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.btn-small {
+    padding: var(--space-1) var(--space-2);
+    font-size: 0.8em;
+}
+
+/*
+ * Default-Button-Hervorhebung: der Button, den Enter auslösen würde.
+ * Fester, gut sichtbarer Ring (nicht currentColor) - Primary/Danger haben
+ * weiße Schrift, ein currentColor-Ring wäre dort unsichtbar.
+ */
+.btn-default {
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #0088c7;
+}
+
+.btn:focus-visible {
+    outline: 2px solid #0088c7;
+    outline-offset: 2px;
+}
+
+/* ===== Modal ===== */
+.modal {
+    display: none;
+    position: fixed;
+    /* Zwischen oberer und unterer auth-statusbar bleiben (siehe
+       auth/statusbar/src/statusbar.css) - die Leisten sind fixed mit extrem
+       hohem z-index und würden sonst Buttons am oberen/unteren Rand eines
+       hohen Dialogs (v.a. auf kurzen mobilen Viewports) überdecken. */
+    inset: var(--auth-sb-top-h, 40px) 0 var(--auth-sb-h, 40px) 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-modal);
+    max-width: 480px;
+    width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: var(--space-4) var(--space-5);
+    font-size: 1.15em;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+/*
+ * Footer-Reihenfolge ist im Markup fest: primäre/bestätigende Aktion zuerst
+ * (links), Abbrechen zuletzt (außen rechts) - siehe Regel 1. Beide Buttons
+ * bilden dafür eine rechtsbündige, kompakte Gruppe (justify-content:flex-end
+ * + reine DOM-Reihenfolge) - bewusst KEIN margin-left:auto-Trick auf dem
+ * letzten Button: das würde mit den lokalen ".modal-footer{justify-
+ * content:flex-end}"-Regeln in cl_manage.html/cl_edit.html kollidieren und
+ * die Buttons auseinanderreißen (primäre Aktion ganz links, Abbrechen ganz
+ * rechts am Fensterrand statt als Gruppe).
+ */
+.modal-footer {
+    padding: var(--space-4) var(--space-5);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-2);
+}
+
+/* ===== Toast / Flyout (Regel 4: nicht-kritische Rückmeldungen) ===== */
+.toast-container {
+    position: fixed;
+    /* + var(--auth-sb-h): sonst rutscht der Toast unter die fixed
+       auth-statusbar-Fußzeile und wird am unteren Rand abgeschnitten. */
+    bottom: calc(var(--auth-sb-h, 40px) + var(--space-5));
+    right: var(--space-5);
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-width: 360px;
+}
+
+.toast {
+    background: #1c2430;
+    color: white;
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 0.92em;
+    animation: toast-in 0.2s ease;
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.toast-success { background: #1f6b3a; }
+.toast-error { background: #8a1f1f; }
+.toast-info { background: #1c4fa2; }
+
+.toast-message {
+    flex: 1;
+}
+
+.toast-action {
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.toast-close {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.1em;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+/* Feld-Hervorhebung für Validierungsfehler (Regel 5: nah am Inhalt) */
+.field-invalid {
+    outline: 2px solid var(--btn-danger) !important;
+    outline-offset: 2px;
+}
+
+/*
+ * Formular-Grundstile (aus auth/view.php zentralisiert). Bewusst nur auf
+ * .ds-form (Auth-Seiten) und .modal-body (Dialoge) angewendet, NICHT global
+ * - die bestehenden Fragen-/Options-Formulare in cl_edit.html/cl_run.html
+ * haben eigenes, spezialisiertes Layout, das hier nicht angefasst wird.
+ */
+.ds-form .form-group,
+.modal-body .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.ds-form label,
+.modal-body label {
+    display: grid;
+    gap: var(--space-1);
+    font-weight: 600;
+    color: var(--text-body);
+}
+
+.ds-form input[type="text"],
+.ds-form input[type="password"],
+.ds-form input[type="email"],
+.modal-body input[type="text"],
+.modal-body input[type="password"],
+.modal-body input[type="email"] {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid #cbd5e1;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+}
+
+.ds-form {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* ===== Mobil: Dialog-Buttons als ausreichend grosse Tippflaechen =====
+ * .btn ist fuer den Desktop kompakt (ca. 24 px hoch); auf dem Handy sind
+ * die Aktionen unten in Dialogen (Speichern, Abbrechen, Loeschen ...) damit
+ * schwer zu treffen. Mindesthoehe 44 px, die Buttons teilen sich die Breite
+ * und brechen bei Platzmangel in eine neue Zeile um. */
+@media (max-width: 768px) {
+    .modal-footer {
+        flex-wrap: wrap;
+    }
+
+    .modal-footer .btn {
+        flex: 1 1 auto;
+        min-height: 44px;
+        padding: 10px 16px;
+        font-size: 1em;
+    }
+}
+
+/* ===== Symbol-Button (nur Symbol, quadratische Tippfläche) ===== */
+.btn-icon {
+    min-width: 36px;
+    min-height: 36px;
+    padding: var(--space-1);
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+}
+
+.btn-icon:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-body);
+}
+
+.btn-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===== Suchfeld (einheitlich in allen Apps) ===== */
+.ds-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.ds-search input {
+    width: 100%;
+    min-height: 40px;
+    padding: var(--space-2) 40px var(--space-2) 38px;
+    border: 1px solid #cbd5e1;
+    border-radius: var(--radius-md);
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23526173' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") no-repeat 11px center / 18px 18px;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text-body);
+}
+
+.ds-search input:focus {
+    outline: 2px solid var(--brand);
+    outline-offset: 0;
+    border-color: var(--brand);
+}
+
+.ds-search .ds-search-clear {
+    position: absolute;
+    right: 2px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 1.1em;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+}
+
+/* ===== Kopfbereich (Titel einer App-Seite) ===== */
+.ds-page-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    padding: var(--space-3) var(--space-4);
+    background: var(--brand-dark);
+    color: #fff;
+    border-radius: var(--radius-lg);
+}
+
+.ds-page-header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.ds-page-header .ds-page-header-actions {
+    margin-left: auto;
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+/* ===== Karte ===== */
+.ds-card {
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: var(--radius-xl);
+    padding: var(--space-4);
+    box-shadow: var(--shadow-card);
+}
+
+/* ===== Tabelle; am Handy als Kartenliste (td[data-label] liefert die Beschriftung) ===== */
+.ds-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ds-table th,
+.ds-table td {
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.ds-table th {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+/* ===== Mobil: 44-px-Tippflächen, 16 px Schrift (kein Auto-Zoom auf dem iPhone) ===== */
+@media (max-width: 768px) {
+    .btn-icon {
+        min-width: var(--tap-min);
+        min-height: var(--tap-min);
+    }
+
+    .ds-search input {
+        min-height: var(--tap-min);
+        font-size: 16px;
+    }
+
+    .ds-search .ds-search-clear {
+        width: var(--tap-min);
+        height: var(--tap-min);
+    }
+
+    .modal-body input[type="text"],
+    .modal-body input[type="password"],
+    .modal-body input[type="email"] {
+        min-height: var(--tap-min);
+        font-size: 16px;
+    }
+
+    .ds-table thead {
+        display: none;
+    }
+
+    .ds-table,
+    .ds-table tbody,
+    .ds-table tr,
+    .ds-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .ds-table tr {
+        padding: var(--space-2) 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .ds-table td {
+        border: none;
+        padding: var(--space-1) var(--space-2);
+        overflow-wrap: anywhere;
+    }
+
+    .ds-table td[data-label]::before {
+        content: attr(data-label) ": ";
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+}

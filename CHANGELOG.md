@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.7.0
+
+- Gemeinsames Design-System aller DAS-DA-Web-Apps: `src/design-system.css` und
+  `src/design-system.js` (Buttons, Symbol-Buttons, Dialoge, Meldungen, Suchfeld, Kopfbereich,
+  Karte, Tabelle mit Handy-Kartenansicht; `openModal`, `closeModal`, `showToast`,
+  `confirmDestructive`, `showInfoDialog`, neu `promptDialog` als Ersatz fuer `prompt()`).
+  Einbindung inline per `auth_design_system_head()` (einmal pro Request).
+- `src/auth-pages.css` + `auth_pages_styles()`: einheitliche Anmelde-/Verwaltungsseiten in der
+  DAS-DA-Farbwelt (Blau `#009EE0`, Navy `#001931`), Tippflaechen mind. 44 px, Eingaben 16 px.
+- Statusleisten am Handy/Tablet (bis 768 px): Leisten 48 px hoch, Symbole 44 x 44 px.
+
 ## v1.5.0
 
 - Icon-Set erweitert um `search`, `edit`, `view`, `rename`, `cancel`, `save`, `live` — deckt die
