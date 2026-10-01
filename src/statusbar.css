@@ -111,12 +111,6 @@
     padding-left: 0;
 }
 
-.auth-sb--has-logo .auth-sb__actions,
-.auth-sb--has-logo .auth-sb__actions--left {
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .auth-sb--has-logo .auth-sb__title {
     margin-left: 8px;
 }

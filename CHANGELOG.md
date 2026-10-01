@@ -1,11 +1,15 @@
 # Changelog
 
+## v1.8.1
+
+- Mit Logo bleiben die Funktionen (`items`) wie bisher rechtsbuendig; nur `leftItems` (z.B. "Zurueck")
+  stehen direkt rechts vom Logo (Logo | leftItems ... Titel | items).
+
 ## v1.8.0
 
 - Obere Leiste: neuer optionaler Kontext-Schluessel `logo` (`src`, `alt`, `href`) fuer
   `auth_statusbar_top()`. Das Logo steht ganz links und ist so hoch wie die Leiste (40 px, am Handy
-  48 px). Mit Logo stehen `leftItems` und `items` immer direkt rechts daneben (Logo | leftItems |
-  items | Titel); die Leiste wird dann auch ohne Items/Titel ausgegeben. Ohne `logo` aendert sich
+  48 px). Mit Logo stehen `leftItems` direkt rechts daneben; die Leiste wird dann auch ohne Items/Titel ausgegeben. Ohne `logo` aendert sich
   nichts. Neue CSS-Klassen `.auth-sb__logo`, `.auth-sb--has-logo`.
 
 ## v1.7.0

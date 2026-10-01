@@ -72,8 +72,8 @@ echo auth_statusbar_render($bottomCtx, $topCtx); // $topCtx = null => keine ober
 ```
 
 Optional zeigt die obere Leiste ein Logo (ab v1.8.0): `'logo' => ['src' => $url, 'alt' => 'Firma', 'href' => '/']`.
-Es steht ganz links und ist so hoch wie die Leiste; `leftItems` und `items` stehen dann direkt rechts daneben
-(Logo | leftItems | items | Titel). Ohne `logo` bleibt alles wie bisher.
+Es steht ganz links und ist so hoch wie die Leiste; `leftItems` (z. B. "Zurück") stehen direkt rechts daneben,
+`items` bleiben rechtsbündig (Logo | leftItems ... Titel | items). Ohne `logo` bleibt alles wie bisher.
 
 Details zu allen Parametern stehen als PHPDoc direkt in `src/statusbar.php`.
 

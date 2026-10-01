@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/icons.php';
 require_once __DIR__ . '/design-system.php';
 
-const AUTH_STATUSBAR_VERSION = '1.8.0';
+const AUTH_STATUSBAR_VERSION = '1.8.1';
 
 if (!function_exists('auth_statusbar_e')) {
     function auth_statusbar_e(string $value): string
@@ -254,9 +254,9 @@ if (!function_exists('auth_statusbar_top')) {
      * leftItems rendert am linken Rand der Leiste (z.B. ein "Zurück"), items wie bisher
      * rechtsbündig. Beide nutzen dasselbe Item-Schema.
      *
-     * logo (src, alt?, href?) zeigt ein Logo ganz links, so hoch wie die Leiste. Ist ein Logo
-     * gesetzt, stehen leftItems und items direkt rechts daneben (Logo | leftItems | items | Titel);
-     * die Leiste wird dann auch ohne Items/Titel ausgegeben.
+     * logo (src, alt?, href?) zeigt ein Logo ganz links, so hoch wie die Leiste. leftItems (z.B. "Zurück")
+     * stehen dann direkt rechts vom Logo, items bleiben wie bisher rechtsbündig
+     * (Logo | leftItems ... Titel | items); die Leiste wird mit Logo auch ohne Items/Titel ausgegeben.
      *
      * @param array{
      *   logo?: ?array{src: string, alt?: ?string, href?: ?string},
@@ -313,10 +313,8 @@ if (!function_exists('auth_statusbar_top')) {
             ? '<nav class="auth-sb__actions" aria-label="Anwendungsfunktionen">' . $itemsHtml . '</nav>'
             : '';
 
-        // Mit Logo: Logo | leftItems | items | Titel - alle Text-Buttons stehen direkt rechts vom Logo.
-        $content = $hasLogo
-            ? $logoHtml . $leftActions . $actions . $titleHtml
-            : $leftActions . $titleHtml . $actions;
+        // Reihenfolge wie bisher; ein Logo steht davor: Logo | leftItems ... Titel | items (rechts)
+        $content = $logoHtml . $leftActions . $titleHtml . $actions;
 
         $html = '<div class="auth-sb auth-sb--top' . ($hasLogo ? ' auth-sb--has-logo' : '') . '" role="navigation" aria-label="Anwendungsfunktionen">'
             . '<div class="auth-sb__inner">' . $content . '</div>'

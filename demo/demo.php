@@ -109,7 +109,7 @@ $frames = [
         ],
         'Client-Umschalter als Inline-Dropdown: Auswahl aendern submitted automatisch.'
     ),
-    'Mit Logo (Buttons direkt rechts vom Logo)' => auth_statusbar_demo_frame(
+    'Mit Logo (Zurück direkt rechts, Funktionen rechtsbündig)' => auth_statusbar_demo_frame(
         [
             'username' => 'willi',
             'roleLabel' => 'Admin',
@@ -130,7 +130,7 @@ $frames = [
                 ['type' => 'link', 'label' => 'Konfiguration', 'href' => '#config', 'icon' => 'gear'],
             ],
         ],
-        'Logo ganz links, so hoch wie die Leiste; leftItems und items stehen direkt rechts daneben.'
+        'Logo ganz links, so hoch wie die Leiste; "Zurück" steht direkt rechts daneben, die Funktionen bleiben rechts.'
     ),
     'Schmaler Viewport (< 560px)' => auth_statusbar_demo_frame(
         [
