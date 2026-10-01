@@ -88,6 +88,39 @@
     margin-right: auto;
 }
 
+/* Logo (obere Leiste): so hoch wie die Leiste, ganz links; Text-Buttons direkt rechts daneben */
+.auth-sb__logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 100%;
+    max-width: 40vw;
+    margin-right: 4px;
+}
+
+.auth-sb__logo img {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+.auth-sb--has-logo .auth-sb__inner {
+    justify-content: flex-start;
+    padding-left: 0;
+}
+
+.auth-sb--has-logo .auth-sb__actions,
+.auth-sb--has-logo .auth-sb__actions--left {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.auth-sb--has-logo .auth-sb__title {
+    margin-left: 8px;
+}
+
 .auth-sb__link {
     display: inline-flex;
     align-items: center;

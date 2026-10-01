@@ -109,6 +109,29 @@ $frames = [
         ],
         'Client-Umschalter als Inline-Dropdown: Auswahl aendern submitted automatisch.'
     ),
+    'Mit Logo (Buttons direkt rechts vom Logo)' => auth_statusbar_demo_frame(
+        [
+            'username' => 'willi',
+            'roleLabel' => 'Admin',
+            'usersUrl' => '#users',
+            'profileUrl' => '#profile',
+            'logoutUrl' => '#logout',
+        ],
+        [
+            'logo' => [
+                'src' => 'data:image/svg+xml;utf8,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40"><rect width="120" height="40" fill="#009EE0"/><text x="60" y="26" font-family="Arial" font-size="16" font-weight="700" text-anchor="middle" fill="#fff">LOGO</text></svg>'),
+                'alt' => 'Demo-Logo',
+                'href' => '#home',
+            ],
+            'leftItems' => [
+                ['type' => 'link', 'label' => 'Zurück zur Startseite', 'href' => '#home', 'icon' => 'arrow-left'],
+            ],
+            'items' => [
+                ['type' => 'link', 'label' => 'Konfiguration', 'href' => '#config', 'icon' => 'gear'],
+            ],
+        ],
+        'Logo ganz links, so hoch wie die Leiste; leftItems und items stehen direkt rechts daneben.'
+    ),
     'Schmaler Viewport (< 560px)' => auth_statusbar_demo_frame(
         [
             'username' => 'willi',
