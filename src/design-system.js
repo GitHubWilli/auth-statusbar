@@ -371,6 +371,9 @@
         function resolve(target) {
             var handle = target.closest ? target.closest(handleSel) : null;
             if (!handle || !container.contains(handle)) return null;
+            for (var node = handle.parentElement; node && node !== container; node = node.parentElement) {
+                if (node.__dsSortable) return null;
+            }
             var item = handle.closest(itemSel);
             if (!item || item.parentElement !== container) return null;
             return { handle: handle, item: item, index: getItems().indexOf(item) };
