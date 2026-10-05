@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.9.0
+
+- Sortieren per Ziehen (Maus, Finger, Stift) als gemeinsame Komponente im Design-System - Ersatz
+  fuer Hoch/Runter-Pfeile: `makeSortable(container, options)`, `createSortHandle()`,
+  `moveArrayItem(arr, from, to)` in `design-system.js`, Klassen `.ds-sort-handle` (Griff, am Handy
+  44 px), `.ds-sort-dragging`, `.ds-sr-only` in `design-system.css`, Icon `grip`.
+- Griff per Tastatur: Pfeil hoch/runter, Pos1, Ende; Ansage per `aria-live`; Esc bricht das Ziehen ab;
+  Auto-Scroll am Rand des Fensters bzw. Scrollbereichs. Demo: `demo/sortable.html`.
+
 ## v1.8.1
 
 - Mit Logo bleiben die Funktionen (`items`) wie bisher rechtsbuendig; nur `leftItems` (z.B. "Zurueck")

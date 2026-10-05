@@ -494,3 +494,75 @@
         color: var(--text-muted);
     }
 }
+
+/* ===== Sortieren per Ziehen (makeSortable in design-system.js) ===== */
+.ds-sort-handle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted, #64748b);
+    cursor: grab;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ds-sort-handle:hover {
+    background: var(--brand-light);
+    color: var(--brand-dark);
+}
+
+.ds-sort-handle:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 1px;
+}
+
+.ds-sort-handle[aria-disabled="true"] {
+    opacity: 0.3;
+    cursor: default;
+    background: transparent;
+}
+
+@media (pointer: coarse) {
+    .ds-sort-handle {
+        width: var(--tap-min);
+        min-width: var(--tap-min);
+        height: var(--tap-min);
+    }
+}
+
+.ds-sort-dragging {
+    position: relative;
+    z-index: 50;
+    box-shadow: 0 10px 28px rgba(0, 25, 49, 0.28);
+    transition: none !important;
+    will-change: transform;
+}
+
+body.ds-sorting,
+body.ds-sorting * {
+    cursor: grabbing !important;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ds-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>makeSortable Demo</title>
+    <link rel="stylesheet" href="../src/design-system.css">
+    <script src="../src/design-system.js"></script>
+    <style>
+        body { font: 14px/1.5 var(--font-ui); margin: 16px; background: #f5f7fa; color: #0f172a; }
+        h1 { font-size: 1.2rem; }
+        .list { max-width: 480px; margin: 0 0 24px; padding: 0; }
+        .row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; margin: 0 0 6px; background: #fff; border: 1px solid #dbe3ec; border-radius: 8px; }
+        .row input { flex: 1; font: inherit; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 6px; }
+        .row.fixed { background: #eef2f6; }
+        .gap { height: 6px; }
+        .sub { margin: 4px 0 0 40px; }
+        .scroll { max-height: 260px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px; background: #fff; max-width: 480px; }
+        pre { background: #fff; border: 1px solid #dbe3ec; padding: 8px; border-radius: 8px; max-width: 480px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>makeSortable — Demo</h1>
+    <p>Am Griff ziehen (Maus/Finger), Esc bricht ab. Griff fokussieren (Tab) und ↑/↓/Pos1/Ende verschiebt per Tastatur.</p>
+
+    <h2>Liste mit fester letzter Zeile und Einfüge-Lücken</h2>
+    <div id="listA" class="list"></div>
+
+    <h2>Langer Bereich mit eigenem Scrollen (Auto-Scroll)</h2>
+    <div class="scroll"><div id="listB" class="list"></div></div>
+
+    <h2>Datenmodell</h2>
+    <pre id="out"></pre>
+
+    <script>
+        var dataA = ['Begrüßung', 'Datum', 'Teilnehmer', 'Bewertung', 'Endkarte (fest)'];
+        var dataB = Array.from({ length: 30 }, function (_, i) { return 'Eintrag ' + (i + 1); });
+
+        function renderA() {
+            var list = document.getElementById('listA');
+            list.innerHTML = '';
+            dataA.forEach(function (label, i) {
+                if (i > 0) { var gap = document.createElement('div'); gap.className = 'gap'; list.appendChild(gap); }
+                var row = document.createElement('div');
+                row.className = 'row' + (i === dataA.length - 1 ? ' fixed' : '');
+                row.appendChild(createSortHandle());
+                var input = document.createElement('input');
+                input.value = label;
+                input.addEventListener('input', function () { dataA[i] = input.value; show(); });
+                row.appendChild(input);
+                list.appendChild(row);
+            });
+            var last = dataA.length - 1;
+            makeSortable(list, {
+                items: '.row',
+                canMove: function (from) { return from !== last; },
+                canDrop: function (from, to) { return to !== last; },
+                onReorder: function (from, to) { moveArrayItem(dataA, from, to); renderA(); show(); },
+                label: function (i) { return dataA[i]; }
+            });
+        }
+
+        function renderB() {
+            var list = document.getElementById('listB');
+            list.innerHTML = '';
+            dataB.forEach(function (label) {
+                var row = document.createElement('div');
+                row.className = 'row';
+                row.appendChild(createSortHandle());
+                row.appendChild(document.createTextNode(label));
+                list.appendChild(row);
+            });
+            makeSortable(list, {
+                items: '.row',
+                onReorder: function (from, to) { moveArrayItem(dataB, from, to); renderB(); show(); },
+                label: function (i) { return dataB[i]; }
+            });
+        }
+
+        function show() {
+            document.getElementById('out').textContent = JSON.stringify({ A: dataA, B: dataB.slice(0, 8).concat(['…']) }, null, 1);
+        }
+
+        renderA(); renderB(); show();
+    </script>
+</body>
+</html>

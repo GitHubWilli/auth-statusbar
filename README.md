@@ -93,6 +93,30 @@ Details zu allen Parametern stehen als PHPDoc direkt in `src/statusbar.php`.
 6. CSS wird als Inline-`<style>`-Block ausgeliefert (nicht als `<link>`-Datei) — kompatibel mit Setups, die
    `www/auth/` per `.htaccess` sperren.
 
+## Sortieren per Ziehen (makeSortable)
+
+Teil des Design-Systems (`auth_design_system_head()`). Ersetzt Hoch/Runter-Pfeile: Eintraege werden am
+Griff mit Maus oder Finger an die Zielposition gezogen. Die Komponente veraendert keine Daten - sie meldet
+`onReorder(from, to)`, die App passt ihr Datenmodell an und rendert neu. Nach jedem Rendern erneut
+aufrufen (idempotent).
+
+```js
+row.prepend(createSortHandle());                 // Griff-Button (.ds-sort-handle) je Eintrag
+makeSortable(listEl, {
+    items: '.question-item',                     // direkte Kinder, die verschiebbar sind
+    canMove: (from) => true,                     // optional, z.B. feste letzte Zeile sperren
+    canDrop: (from, to) => true,                 // optional, verbotene Zielpositionen
+    onReorder: (from, to) => { moveArrayItem(data, from, to); render(); },
+    label: (i) => 'Frage ' + (i + 1)             // optional, Screenreader-Ansage
+});
+```
+
+- Ziehen nur am Griff (`touch-action: none`); ausserhalb scrollt die Seite am Handy normal.
+- Tastatur: Griff fokussieren, Pfeil hoch/runter, Pos1/Ende; Fokus bleibt am verschobenen Eintrag.
+- Esc bricht ab; Auto-Scroll am Rand des Fensters bzw. des naechsten Scrollbereichs.
+- Verschachtelte Listen (z.B. Unterpunkte): eigener Aufruf je Liste, Ziehen nur innerhalb der Liste.
+- Indizes beziehen sich nur auf Elemente, die `items` entsprechen (Luecken/Buttons dazwischen zaehlen nicht).
+
 ## Update-Prozedur (pro einbindendem Projekt)
 
 ```bash
