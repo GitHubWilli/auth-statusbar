@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.9.1
+
+- Icon `trash` vereinheitlicht: Papierkorb wie in allen Webanwendungen (Lucide "trash-2", mit zwei Strichen im Korb).
+
 ## v1.9.0
 
 - Sortieren per Ziehen (Maus, Finger, Stift) als gemeinsame Komponente im Design-System - Ersatz
