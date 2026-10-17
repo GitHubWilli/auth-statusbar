@@ -1,6 +1,26 @@
-/* Dark Mode (ab v2.1.0, gemeinsam fuer alle Apps): invertiert die dargestellte Seite per backdrop-filter.
-   Leiste und Menue liegen darueber (hoeherer z-index) und bleiben unveraendert. */
-html.auth-dark::after {
+/* Dark Mode (gemeinsam fuer alle Apps): Filter direkt auf der Seite (html), ohne vollflaechigen Overlay.
+   Leiste/Menue, Bilder und Videos erhalten den Gegenfilter und bleiben damit farbtreu:
+   Gegenfilter = hue-rotate(180deg) invert(1) contrast(1.25) hebt invert(.9) hue-rotate(180deg) wieder auf.
+   iOS (Klasse auth-dark-bd, siehe auth_darkmode_head): dort bricht ein Filter auf html position:fixed,
+   deshalb weiter der Overlay mit backdrop-filter. */
+html.auth-dark:not(.auth-dark-bd) {
+    filter: invert(.9) hue-rotate(180deg);
+    background: #fff;
+}
+
+html.auth-dark:not(.auth-dark-bd) img,
+html.auth-dark:not(.auth-dark-bd) video,
+html.auth-dark:not(.auth-dark-bd) canvas,
+html.auth-dark:not(.auth-dark-bd) picture,
+html.auth-dark:not(.auth-dark-bd) .auth-sb {
+    filter: hue-rotate(180deg) invert(1) contrast(1.25);
+}
+
+html.auth-dark:not(.auth-dark-bd) .auth-sb img {
+    filter: none;
+}
+
+html.auth-dark.auth-dark-bd::after {
     content: '';
     position: fixed;
     inset: 0;

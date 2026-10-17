@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.2.0
+
+- Dark Mode schneller: Filter direkt auf `html` statt vollflaechigem backdrop-filter-Overlay; Leiste, Menue, Bilder und Videos mit Gegenfilter (farbtreu). iOS behaelt den Overlay (Klasse `auth-dark-bd`), weil dort ein Filter auf html `position: fixed` bricht.
+
 ## v2.1.1
 
 - `auth_darkmode_head()`: Dark-Mode-CSS + Sofort-Anwendung auch fuer Seiten, die `auth_design_system_head()` nicht einbinden (z.B. Systeminfo-Tool, Wochendisposition).
