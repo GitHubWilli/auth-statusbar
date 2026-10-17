@@ -1,0 +1,16 @@
+/* Dark Mode (ab v2.1.0, gemeinsam fuer alle Apps): invertiert die dargestellte Seite per backdrop-filter.
+   Leiste und Menue liegen darueber (hoeherer z-index) und bleiben unveraendert. */
+html.auth-dark::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 2147479000;
+    pointer-events: none;
+    -webkit-backdrop-filter: invert(.9) hue-rotate(180deg);
+    backdrop-filter: invert(.9) hue-rotate(180deg);
+}
+
+/* Symbol und Beschriftung des Umschalters je nach Modus */
+.auth-sb-dm-sun, .auth-sb-dm-light { display: none; }
+html.auth-dark .auth-sb-dm-sun, html.auth-dark .auth-sb-dm-light { display: inline-flex; }
+html.auth-dark .auth-sb-dm-moon, html.auth-dark .auth-sb-dm-dark { display: none; }

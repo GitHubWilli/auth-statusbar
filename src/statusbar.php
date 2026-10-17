@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/icons.php';
 require_once __DIR__ . '/design-system.php';
 
-const AUTH_STATUSBAR_VERSION = '2.0.0';
+const AUTH_STATUSBAR_VERSION = '2.1.0';
 
 if (!function_exists('auth_statusbar_e')) {
     function auth_statusbar_e(string $value): string
@@ -191,6 +191,9 @@ if (!function_exists('auth_statusbar_menu_script')) {
         $emitted = true;
 
         return '<script>(function(){'
+            . 'document.addEventListener("click",function(e){var d=e.target.closest&&e.target.closest("#authSbDarkMode");if(!d)return;'
+            . 'var on=!document.documentElement.classList.contains("auth-dark");document.documentElement.classList.toggle("auth-dark",on);'
+            . 'try{localStorage.setItem("auth_darkmode",on?"1":"0");}catch(x){}});'
             . 'function box(){return document.getElementById("authSbMenu");}'
             . 'function set(open){var m=box();if(!m)return;m.classList.toggle("is-open",open);'
             . 'var b=document.getElementById("authSbMenuBtn");if(b){b.setAttribute("aria-expanded",open?"true":"false");}}'
@@ -247,6 +250,13 @@ if (!function_exists('auth_statusbar_menu')) {
         foreach ($menuItems as $item) {
             $extra .= auth_statusbar_top_item($item);
         }
+
+        // Umschalter Dark/Light Mode: in jedem Menue (auch oeffentliche Ansichten), Wahl wird je Geraet gemerkt
+        $extra .= '<button type="button" class="auth-sb__link" id="authSbDarkMode" title="Zwischen hellem und dunklem Design wechseln">'
+            . '<span class="auth-sb__icon auth-sb-dm-moon" aria-hidden="true">' . auth_statusbar_icon('moon') . '</span>'
+            . '<span class="auth-sb__icon auth-sb-dm-sun" aria-hidden="true">' . auth_statusbar_icon('sun') . '</span>'
+            . '<span class="auth-sb__link-label auth-sb-dm-dark">Dark Mode</span>'
+            . '<span class="auth-sb__link-label auth-sb-dm-light">Light Mode</span></button>';
 
         $account = '';
         if (!empty($bottom['usersUrl'])) {
@@ -448,17 +458,9 @@ if (!function_exists('auth_statusbar_render')) {
         // Seit v2.0.0 gibt es keine untere Leiste mehr: der Konto-Kontext ($bottom) wird zum
         // Hamburger-Menue ganz rechts in der oberen Leiste (zusammen mit $top['menuItems'] und allen items mit 'menu' => true).
         $top = $top ?? [];
-        // Items mit 'menu' => true (Konto-/App-Funktionen wie Konfiguration, Bereich-Auswahl) wandern ins Menue.
-        $menuItems = $top['menuItems'] ?? [];
-        $barItems = [];
-        foreach ($top['items'] ?? [] as $item) {
-            if (!empty($item['menu'])) {
-                $menuItems[] = $item;
-            } else {
-                $barItems[] = $item;
-            }
-        }
-        $top['items'] = $barItems;
+        // Alle Seiten-Aktionen ($top['items']) stehen seit v2.1.0 im Menue; links bleiben nur Logo, Zurueck und Titel.
+        $menuItems = array_merge($top['menuItems'] ?? [], $top['items'] ?? []);
+        $top['items'] = [];
         $top['menuHtml'] = auth_statusbar_menu($bottom, $menuItems);
 
         return auth_statusbar_styles() . auth_statusbar_top($top);

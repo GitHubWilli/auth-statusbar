@@ -32,7 +32,11 @@ if (!function_exists('auth_design_system_head')) {
         }
         $emitted = true;
 
-        return '<style>' . auth_design_system_read('design-system.css') . '</style>'
+        // Gespeicherte Dark-/Light-Einstellung (je Geraet und Anwendung) sofort anwenden, bevor die Seite gezeichnet wird
+        $darkEarly = '<script>try{if(localStorage.getItem("auth_darkmode")==="1"){document.documentElement.classList.add("auth-dark");}}catch(e){}</script>';
+
+        return '<style>' . auth_design_system_read('design-system.css') . auth_design_system_read('darkmode.css') . '</style>'
+            . $darkEarly
             . '<script>' . auth_design_system_read('design-system.js') . '</script>';
     }
 }

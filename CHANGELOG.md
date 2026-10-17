@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.1.0
+
+- **Alle Aktionen im Menue:** `items` der oberen Leiste stehen jetzt im Hamburger-Menue; in der Leiste bleiben Logo, `leftItems` (Zurueck) und Titel.
+- **Dark/Light Mode fuer alle Apps:** Umschalter mit Mond-/Sonnen-Symbol in jedem Menue, Einstellung je Geraet und Anwendung (`localStorage` `auth_darkmode`), wird ueber `auth_design_system_head()` auf jeder Seite (auch oeffentliche Links) sofort angewendet. Neue Icons `moon`, `sun`, neue Datei `src/darkmode.css`.
+
 ## v2.0.0
 
 - **Keine untere Leiste mehr.** `auth_statusbar_render($bottom, $top)` zeigt nur noch die obere Leiste; der bisherige Konto-Kontext `$bottom`
