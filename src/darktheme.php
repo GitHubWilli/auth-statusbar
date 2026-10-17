@@ -87,7 +87,7 @@ if (!function_exists('auth_darktheme_build')) {
         $inlineKeys = array_keys($inline);
         sort($inlineKeys);
 
-        $key = md5($source . "\0" . implode("\0", $inlineKeys) . "\0v3");
+        $key = md5($source . "\0" . implode("\0", $inlineKeys) . "\0v4"v4");
         $cacheFile = sys_get_temp_dir() . '/auth-darktheme-' . $key . '.css';
         if (is_file($cacheFile)) {
             return (string) file_get_contents($cacheFile);
@@ -112,9 +112,25 @@ if (!function_exists('auth_dt_generate')) {
 
         $roles = auth_dt_var_roles($source);
         $out = 'html.auth-dark{color-scheme:dark}'
-            . $P . ' body{background-color:#121212;color:#e5e7eb}'
+            . $P . ' body{background-color:#121212!important;color:#e5e7eb}'
             . $P . ' ::placeholder{color:#8b95a5}';
         $out .= auth_dt_walk($source, $P, $roles);
+
+        // Variablen, die nur zur Laufzeit per JS gesetzt werden (nicht im CSS definiert): Dunkel-Standard je Rolle
+        preg_match_all('~(--[\w-]+)\s*:~', $source, $defMatches);
+        $defined = array_flip($defMatches[1]);
+        $defaults = ['bg' => '#1e1e1e', 'fg' => '#e5e7eb', 'border' => '#3a3a3a'];
+        $varDefaults = '';
+        foreach ($roles as $name => $use) {
+            if (isset($defined[$name]) || stripos($name, 'shadow') !== false) {
+                continue;
+            }
+            $role = isset($use['bg']) ? 'bg' : (isset($use['fg']) ? 'fg' : 'border');
+            $varDefaults .= $name . ':' . $defaults[$role] . '!important;';
+        }
+        if ($varDefaults !== '') {
+            $out .= $P . '{' . $varDefaults . '}';
+        }
 
         foreach ($inlineStyles as $style) {
             $decoded = html_entity_decode($style, ENT_QUOTES | ENT_HTML5, 'UTF-8');
@@ -397,7 +413,11 @@ if (!function_exists('auth_dt_decls')) {
             if ($mapped === null) {
                 continue;
             }
-            $out .= $prop . ':' . $mapped . (($important || $forceImportant) ? '!important' : '') . ';';
+            $isVar = strpos($prop, '--') === 0;
+            if ($isVar && strtolower(preg_replace('~\s+~', '', $mapped)) === strtolower(preg_replace('~\s+~', '', $value))) {
+                continue; // unveraenderte Variable (Akzentfarbe): Laufzeit-Einstellung der App bleibt wirksam
+            }
+            $out .= $prop . ':' . $mapped . (($important || $forceImportant || $isVar) ? '!important' : '') . ';';
         }
 
         return $out;
