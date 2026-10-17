@@ -18,6 +18,24 @@ if (!function_exists('auth_design_system_read')) {
     }
 }
 
+if (!function_exists('auth_darkmode_head')) {
+    /**
+     * Dark-Mode-CSS und sofortiges Anwenden der gespeicherten Einstellung (je Geraet und Anwendung).
+     * Einmal pro Seite; auch fuer Seiten ohne vollstaendiges Design-System (auth_design_system_head).
+     */
+    function auth_darkmode_head(): string
+    {
+        static $emitted = false;
+        if ($emitted) {
+            return '';
+        }
+        $emitted = true;
+
+        return '<style>' . auth_design_system_read('darkmode.css') . '</style>'
+            . '<script>try{if(localStorage.getItem("auth_darkmode")==="1"){document.documentElement.classList.add("auth-dark");}}catch(e){}</script>';
+    }
+}
+
 if (!function_exists('auth_design_system_head')) {
     /**
      * Design-System (CSS + JS: Buttons, Dialoge, Meldungen, Suchfeld,
@@ -32,11 +50,8 @@ if (!function_exists('auth_design_system_head')) {
         }
         $emitted = true;
 
-        // Gespeicherte Dark-/Light-Einstellung (je Geraet und Anwendung) sofort anwenden, bevor die Seite gezeichnet wird
-        $darkEarly = '<script>try{if(localStorage.getItem("auth_darkmode")==="1"){document.documentElement.classList.add("auth-dark");}}catch(e){}</script>';
-
-        return '<style>' . auth_design_system_read('design-system.css') . auth_design_system_read('darkmode.css') . '</style>'
-            . $darkEarly
+        return '<style>' . auth_design_system_read('design-system.css') . '</style>'
+            . auth_darkmode_head()
             . '<script>' . auth_design_system_read('design-system.js') . '</script>';
     }
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.1.1
+
+- `auth_darkmode_head()`: Dark-Mode-CSS + Sofort-Anwendung auch fuer Seiten, die `auth_design_system_head()` nicht einbinden (z.B. Systeminfo-Tool, Wochendisposition).
+
 ## v2.1.0
 
 - **Alle Aktionen im Menue:** `items` der oberen Leiste stehen jetzt im Hamburger-Menue; in der Leiste bleiben Logo, `leftItems` (Zurueck) und Titel.
