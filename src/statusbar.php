@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/icons.php';
 require_once __DIR__ . '/design-system.php';
 
-const AUTH_STATUSBAR_VERSION = '1.9.0';
+const AUTH_STATUSBAR_VERSION = '2.0.0';
 
 if (!function_exists('auth_statusbar_e')) {
     function auth_statusbar_e(string $value): string
@@ -176,6 +176,111 @@ if (!function_exists('auth_statusbar_styles')) {
     }
 }
 
+if (!function_exists('auth_statusbar_menu_script')) {
+    /**
+     * Einmalig emittierter, delegierter Handler fuer das Menue oben rechts:
+     * Klick auf den Button oeffnet/schliesst, Klick daneben, Esc und Fokusverlust schliessen,
+     * Pfeil hoch/runter wandert durch die Eintraege.
+     */
+    function auth_statusbar_menu_script(): string
+    {
+        static $emitted = false;
+        if ($emitted) {
+            return '';
+        }
+        $emitted = true;
+
+        return '<script>(function(){'
+            . 'function box(){return document.getElementById("authSbMenu");}'
+            . 'function set(open){var m=box();if(!m)return;m.classList.toggle("is-open",open);'
+            . 'var b=document.getElementById("authSbMenuBtn");if(b){b.setAttribute("aria-expanded",open?"true":"false");}}'
+            . 'function items(){var m=box();return m?[].slice.call(m.querySelectorAll(".auth-sb-menu__panel a,.auth-sb-menu__panel button,.auth-sb-menu__panel select")):[];}'
+            . 'document.addEventListener("click",function(e){var m=box();if(!m)return;'
+            . 'var b=e.target.closest&&e.target.closest("#authSbMenuBtn");'
+            . 'if(b){set(!m.classList.contains("is-open"));return;}'
+            . 'if(!m.classList.contains("is-open"))return;'
+            . 'if(!e.target.closest(".auth-sb-menu__panel")){set(false);}'
+            . 'else if(e.target.closest("a,button")){set(false);}});'
+            . 'document.addEventListener("keydown",function(e){var m=box();if(!m||!m.classList.contains("is-open"))return;'
+            . 'if(e.key==="Escape"){set(false);var b=document.getElementById("authSbMenuBtn");if(b)b.focus();return;}'
+            . 'if(e.key==="ArrowDown"||e.key==="ArrowUp"){var l=items();if(!l.length)return;e.preventDefault();'
+            . 'var i=l.indexOf(document.activeElement);i=e.key==="ArrowDown"?(i+1)%l.length:(i<=0?l.length-1:i-1);l[i].focus();}});'
+            . 'document.addEventListener("focusin",function(e){var m=box();if(m&&m.classList.contains("is-open")&&!m.contains(e.target)){set(false);}});'
+            . '})();</script>';
+    }
+}
+
+if (!function_exists('auth_statusbar_menu')) {
+    /**
+     * Hamburger-Menue ganz rechts in der oberen Leiste (ersetzt die frueher untere Leiste):
+     * Kopf mit Benutzername/Rolle, danach $menuItems (gleiches Item-Schema wie die oberen Items,
+     * z.B. Bereich-Auswahl, Konfiguration, Dark Mode), danach Benutzer / Profil / Abmelden.
+     * Gibt '' zurueck, wenn nichts anzuzeigen ist (z.B. oeffentliche Ansicht ohne Konto).
+     *
+     * @param array $bottom Konto-Kontext wie frueher fuer die untere Leiste (username, roleLabel, usersUrl, profileUrl, logoutUrl, labels).
+     * @param array $menuItems Zusaetzliche Eintraege (Item-Schema wie auth_statusbar_top_item()).
+     */
+    function auth_statusbar_menu(array $bottom, array $menuItems = []): string
+    {
+        $username = (string) ($bottom['username'] ?? '');
+        $roleLabel = $bottom['roleLabel'] ?? null;
+        $labels = array_merge([
+            'users' => 'Benutzer',
+            'profile' => 'Profil',
+            'logout' => 'Abmelden',
+            'menu' => 'Menü',
+        ], $bottom['labels'] ?? []);
+
+        $head = '';
+        if ($username !== '' || !empty($roleLabel)) {
+            $head .= '<div class="auth-sb-menu__head">';
+            if ($username !== '') {
+                $head .= '<span class="auth-sb__user">' . auth_statusbar_e($username) . '</span>';
+            }
+            if (!empty($roleLabel)) {
+                $head .= '<span class="auth-sb__badge">' . auth_statusbar_e((string) $roleLabel) . '</span>';
+            }
+            $head .= '</div>';
+        }
+
+        $extra = '';
+        foreach ($menuItems as $item) {
+            $extra .= auth_statusbar_top_item($item);
+        }
+
+        $account = '';
+        if (!empty($bottom['usersUrl'])) {
+            $account .= auth_statusbar_link((string) $bottom['usersUrl'], $labels['users'], 'Benutzerverwaltung', 'users');
+        }
+        if (!empty($bottom['profileUrl'])) {
+            $account .= auth_statusbar_link((string) $bottom['profileUrl'], $labels['profile'], 'Profil', 'profile');
+        }
+        if (!empty($bottom['logoutUrl'])) {
+            $account .= '<span class="auth-sb-menu__logout">'
+                . auth_statusbar_link((string) $bottom['logoutUrl'], $labels['logout'], 'Abmelden', 'logout') . '</span>';
+        }
+
+        if ($extra === '' && $account === '') {
+            return '';
+        }
+
+        $body = $head . $extra;
+        if ($extra !== '' && $account !== '') {
+            $body .= '<div class="auth-sb-menu__sep" role="separator"></div>';
+        }
+        $body .= $account;
+
+        $menuIcon = auth_statusbar_icon('menu');
+
+        return '<div class="auth-sb-menu" id="authSbMenu">'
+            . '<button type="button" class="auth-sb__link auth-sb__menu-btn" id="authSbMenuBtn" aria-haspopup="true" aria-expanded="false"'
+            . ' aria-controls="authSbMenuPanel" aria-label="' . auth_statusbar_e($labels['menu']) . '" title="' . auth_statusbar_e($labels['menu']) . '">'
+            . '<span class="auth-sb__icon" aria-hidden="true">' . $menuIcon . '</span></button>'
+            . '<div class="auth-sb-menu__panel" id="authSbMenuPanel" role="menu" aria-label="' . auth_statusbar_e($labels['menu']) . '">' . $body . '</div>'
+            . '</div>' . auth_statusbar_menu_script();
+    }
+}
+
 if (!function_exists('auth_statusbar_bottom')) {
     /**
      * Untere Benutzerverwaltungs-Leiste. In identischer Form in allen Anwendungen verwendet.
@@ -272,11 +377,12 @@ if (!function_exists('auth_statusbar_top')) {
         $leftItems = $ctx['leftItems'] ?? [];
         $items = $ctx['items'] ?? [];
         $reserveSpace = $ctx['reserveSpace'] ?? true;
+        $menuHtml = (string) ($ctx['menuHtml'] ?? '');
         $logo = is_array($ctx['logo'] ?? null) ? $ctx['logo'] : null;
         $logoSrc = $logo !== null ? trim((string) ($logo['src'] ?? '')) : '';
         $hasLogo = $logoSrc !== '';
 
-        if (empty($title) && empty($leftItems) && empty($items) && !$hasLogo) {
+        if (empty($title) && empty($leftItems) && empty($items) && !$hasLogo && $menuHtml === '') {
             return '';
         }
 
@@ -309,6 +415,8 @@ if (!function_exists('auth_statusbar_top')) {
             $itemsHtml .= auth_statusbar_top_item($item);
         }
 
+        $itemsHtml .= $menuHtml;
+
         $actions = $itemsHtml !== ''
             ? '<nav class="auth-sb__actions" aria-label="Anwendungsfunktionen">' . $itemsHtml . '</nav>'
             : '';
@@ -330,19 +438,18 @@ if (!function_exists('auth_statusbar_top')) {
 
 if (!function_exists('auth_statusbar_render')) {
     /**
-     * Komfort-Wrapper: Styles + optionale obere Leiste + untere Leiste in korrekter Reihenfolge.
+     * Komfort-Wrapper: Styles + obere Leiste mit Hamburger-Menue (ersetzt seit v2.0.0 die untere Leiste).
      *
      * @param array $bottom Siehe auth_statusbar_bottom().
      * @param array|null $top Siehe auth_statusbar_top(). null = keine obere Leiste.
      */
     function auth_statusbar_render(array $bottom, ?array $top = null): string
     {
-        $html = auth_statusbar_styles();
-        if ($top !== null) {
-            $html .= auth_statusbar_top($top);
-        }
-        $html .= auth_statusbar_bottom($bottom);
+        // Seit v2.0.0 gibt es keine untere Leiste mehr: der Konto-Kontext ($bottom) wird zum
+        // Hamburger-Menue ganz rechts in der oberen Leiste (zusammen mit $top['menuItems']).
+        $top = $top ?? [];
+        $top['menuHtml'] = auth_statusbar_menu($bottom, $top['menuItems'] ?? []);
 
-        return $html;
+        return auth_statusbar_styles() . auth_statusbar_top($top);
     }
 }

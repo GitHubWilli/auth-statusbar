@@ -1,5 +1,13 @@
 # Changelog
 
+## v2.0.0
+
+- **Keine untere Leiste mehr.** `auth_statusbar_render($bottom, $top)` zeigt nur noch die obere Leiste; der bisherige Konto-Kontext `$bottom`
+  (Name, Rolle, Benutzer/Profil/Abmelden) steht als **Hamburger-Menue** ganz rechts in der oberen Leiste (`auth_statusbar_menu()`).
+- Neuer optionaler Schluessel `menuItems` im `$top`-Kontext: zusaetzliche Eintraege im Menue (Item-Schema wie `items`, z.B. Bereich-Auswahl, Konfiguration, Dark Mode).
+- `--auth-sb-h` ist jetzt 0 (Seiten, die `var(--auth-sb-h)` fuer Abstaende nutzen, passen sich selbst an); `auth_statusbar_bottom()` bleibt als Funktion erhalten, wird aber nicht mehr aufgerufen.
+- Icon `menu` (Lucide, drei Striche). Menue: Esc/Klick daneben schliesst, Pfeiltasten wandern durch die Eintraege, Eintraege am Handy 44 px hoch.
+
 ## v1.9.1
 
 - Icon `trash` vereinheitlicht: Papierkorb wie in allen Webanwendungen (Lucide "trash-2", mit zwei Strichen im Korb).

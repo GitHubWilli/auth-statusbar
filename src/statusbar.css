@@ -1,5 +1,5 @@
 :root {
-    --auth-sb-h: 40px;
+    --auth-sb-h: 0px; /* keine untere Leiste mehr (seit v2.0.0) */
     --auth-sb-top-h: 40px;
     --auth-sb-bg: #1f2937;
     --auth-sb-fg: #e5e7eb;
@@ -196,6 +196,89 @@
     background: #ffffff;
 }
 
+/* Hamburger-Menue (ersetzt die untere Leiste) */
+.auth-sb-menu {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.auth-sb__menu-btn .auth-sb__icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.auth-sb__menu-btn {
+    min-width: 40px;
+    min-height: 36px;
+    justify-content: center;
+}
+
+.auth-sb-menu__panel {
+    display: none;
+    position: fixed;
+    top: var(--auth-sb-top-h);
+    right: 8px;
+    min-width: 230px;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100vh - var(--auth-sb-top-h) - 8px);
+    max-height: calc(100dvh - var(--auth-sb-top-h) - 8px);
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding: 6px;
+    background: var(--auth-sb-bg);
+    color: var(--auth-sb-fg);
+    border: 1px solid var(--auth-sb-border);
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.auth-sb-menu.is-open .auth-sb-menu__panel {
+    display: block;
+}
+
+.auth-sb-menu__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px 10px;
+    border-bottom: 1px solid var(--auth-sb-border);
+    margin-bottom: 4px;
+}
+
+.auth-sb-menu__sep {
+    height: 1px;
+    margin: 4px 2px;
+    background: var(--auth-sb-border);
+}
+
+.auth-sb-menu__panel .auth-sb__link,
+.auth-sb-menu__panel .auth-sb__form {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    min-height: 44px;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.auth-sb-menu__panel .auth-sb__link-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+}
+
+.auth-sb-menu__panel .auth-sb__select {
+    flex: 1;
+    max-width: none;
+}
+
+.auth-sb-menu__logout .auth-sb__link {
+    color: #fca5a5;
+}
+
 /* Platzreservierung, per Inline-Script auf <body> gesetzt */
 body.auth-sb-space-bottom {
     padding-bottom: var(--auth-sb-h) !important;
@@ -224,7 +307,6 @@ body.auth-sb-space-top {
 /* Handy/Tablet: Leisten 48 px, Symbole als 44-px-Tippflaechen */
 @media (max-width: 768px) {
     :root {
-        --auth-sb-h: 48px;
         --auth-sb-top-h: 48px;
     }
 
