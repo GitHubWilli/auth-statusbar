@@ -87,7 +87,7 @@ if (!function_exists('auth_darktheme_build')) {
         $inlineKeys = array_keys($inline);
         sort($inlineKeys);
 
-        $key = md5($source . "\0" . implode("\0", $inlineKeys) . "\0v4");
+        $key = md5($source . "\0" . implode("\0", $inlineKeys) . "\0v5");
         $cacheFile = sys_get_temp_dir() . '/auth-darktheme-' . $key . '.css';
         if (is_file($cacheFile)) {
             return (string) file_get_contents($cacheFile);
@@ -122,7 +122,8 @@ if (!function_exists('auth_dt_generate')) {
         $defaults = ['bg' => '#1e1e1e', 'fg' => '#e5e7eb', 'border' => '#3a3a3a'];
         $varDefaults = '';
         foreach ($roles as $name => $use) {
-            if (isset($defined[$name]) || stripos($name, 'shadow') !== false) {
+            if (isset($defined[$name]) || stripos($name, 'shadow') !== false
+                || preg_match('~btn|button|accent|primary|brand|success|danger|warn|info|link~i', $name)) {
                 continue;
             }
             $role = isset($use['bg']) ? 'bg' : (isset($use['fg']) ? 'fg' : 'border');
@@ -269,7 +270,7 @@ if (!function_exists('auth_dt_walk')) {
                 continue;
             }
 
-            $decls = auth_dt_decls($body, $roles, false);
+            $decls = auth_dt_body($body, $roles);
             if ($decls === '') {
                 continue;
             }
@@ -365,6 +366,89 @@ if (!function_exists('auth_dt_split_decls')) {
         $list[] = $cur;
 
         return $list;
+    }
+}
+
+if (!function_exists('auth_dt_body')) {
+    /** Regelkoerper inkl. verschachtelter Regeln (natives CSS-Nesting, z.B. "& select { ... }"). */
+    function auth_dt_body(string $body, array $roles): string
+    {
+        $out = '';
+        $n = strlen($body);
+        $cur = '';
+        $paren = 0;
+        $quote = '';
+        for ($i = 0; $i < $n; $i++) {
+            $c = $body[$i];
+            if ($quote !== '') {
+                if ($c === '\\') {
+                    $cur .= $c . ($body[$i + 1] ?? '');
+                    $i++;
+                    continue;
+                }
+                if ($c === $quote) {
+                    $quote = '';
+                }
+                $cur .= $c;
+                continue;
+            }
+            if ($c === '"' || $c === "'") {
+                $quote = $c;
+                $cur .= $c;
+                continue;
+            }
+            if ($c === '(') {
+                $paren++;
+            } elseif ($c === ')') {
+                $paren--;
+            }
+            if ($paren <= 0 && $c === ';') {
+                $out .= auth_dt_decls($cur, $roles, false);
+                $cur = '';
+                continue;
+            }
+            if ($paren <= 0 && $c === '{') {
+                $prelude = trim($cur);
+                $cur = '';
+                $depth = 1;
+                $start = $i + 1;
+                $q2 = '';
+                $p2 = 0;
+                for ($i = $start; $i < $n && $depth > 0; $i++) {
+                    $d = $body[$i];
+                    if ($q2 !== '') {
+                        if ($d === '\\') {
+                            $i++;
+                        } elseif ($d === $q2) {
+                            $q2 = '';
+                        }
+                    } elseif ($d === '"' || $d === "'") {
+                        $q2 = $d;
+                    } elseif ($d === '(') {
+                        $p2++;
+                    } elseif ($d === ')') {
+                        $p2--;
+                    } elseif ($p2 <= 0 && $d === '{') {
+                        $depth++;
+                    } elseif ($p2 <= 0 && $d === '}') {
+                        $depth--;
+                    }
+                }
+                $inner = substr($body, $start, $i - 1 - $start);
+                $i--;
+                if ($prelude !== '' && !preg_match('~^@(keyframes|font-face|page)~i', $prelude)) {
+                    $nested = auth_dt_body($inner, $roles);
+                    if ($nested !== '') {
+                        $out .= $prelude . '{' . $nested . '}';
+                    }
+                }
+                continue;
+            }
+            $cur .= $c;
+        }
+        $out .= auth_dt_decls($cur, $roles, false);
+
+        return $out;
     }
 }
 
@@ -606,7 +690,7 @@ if (!function_exists('auth_dt_map_color')) {
                 $l2 = $l; // kraeftige Akzentfarben (Buttons, Status) bleiben
             } elseif ($l >= 0.5) {
                 $l2 = 0.08 + ($l - 0.5) * 0.16;
-                $s = $s > 0.25 ? $s * 0.55 : $s;
+                $s = $s > 0.2 ? $s * 0.4 : $s;
             } else {
                 $l2 = $l;
             }
