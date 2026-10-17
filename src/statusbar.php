@@ -446,9 +446,20 @@ if (!function_exists('auth_statusbar_render')) {
     function auth_statusbar_render(array $bottom, ?array $top = null): string
     {
         // Seit v2.0.0 gibt es keine untere Leiste mehr: der Konto-Kontext ($bottom) wird zum
-        // Hamburger-Menue ganz rechts in der oberen Leiste (zusammen mit $top['menuItems']).
+        // Hamburger-Menue ganz rechts in der oberen Leiste (zusammen mit $top['menuItems'] und allen items mit 'menu' => true).
         $top = $top ?? [];
-        $top['menuHtml'] = auth_statusbar_menu($bottom, $top['menuItems'] ?? []);
+        // Items mit 'menu' => true (Konto-/App-Funktionen wie Konfiguration, Bereich-Auswahl) wandern ins Menue.
+        $menuItems = $top['menuItems'] ?? [];
+        $barItems = [];
+        foreach ($top['items'] ?? [] as $item) {
+            if (!empty($item['menu'])) {
+                $menuItems[] = $item;
+            } else {
+                $barItems[] = $item;
+            }
+        }
+        $top['items'] = $barItems;
+        $top['menuHtml'] = auth_statusbar_menu($bottom, $menuItems);
 
         return auth_statusbar_styles() . auth_statusbar_top($top);
     }
