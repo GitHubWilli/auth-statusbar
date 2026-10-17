@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.0.0
+
+- **Echtes Dark Theme** statt Filter/Overlay: `src/darktheme.php` leitet beim Ausliefern jeder HTML-Seite (Output-Buffer, `auth_darktheme_start()`) aus dem vorhandenen CSS (style-Bloecke, lokale Stylesheets, statische style-Attribute) automatisch Dunkel-Regeln unter `html.auth-dark` ab (Farben nach Rolle Hintergrund/Text/Rahmen umgerechnet, Farbton bleibt; Ergebnis je CSS-Stand gecacht). Keine Laufzeit-Filter mehr, dadurch flott.
+- Umschalter: nur Mond bei "Dark Mode", nur Sonne bei "Light Mode".
+
 ## v2.2.0
 
 - Dark Mode schneller: Filter direkt auf `html` statt vollflaechigem backdrop-filter-Overlay; Leiste, Menue, Bilder und Videos mit Gegenfilter (farbtreu). iOS behaelt den Overlay (Klasse `auth-dark-bd`), weil dort ein Filter auf html `position: fixed` bricht.

@@ -1,36 +1,8 @@
-/* Dark Mode (gemeinsam fuer alle Apps): Filter direkt auf der Seite (html), ohne vollflaechigen Overlay.
-   Leiste/Menue, Bilder und Videos erhalten den Gegenfilter und bleiben damit farbtreu:
-   Gegenfilter = hue-rotate(180deg) invert(1) contrast(1.25) hebt invert(.9) hue-rotate(180deg) wieder auf.
-   iOS (Klasse auth-dark-bd, siehe auth_darkmode_head): dort bricht ein Filter auf html position:fixed,
-   deshalb weiter der Overlay mit backdrop-filter. */
-html.auth-dark:not(.auth-dark-bd) {
-    filter: invert(.9) hue-rotate(180deg);
-    background: #fff;
-}
-
-html.auth-dark:not(.auth-dark-bd) img,
-html.auth-dark:not(.auth-dark-bd) video,
-html.auth-dark:not(.auth-dark-bd) canvas,
-html.auth-dark:not(.auth-dark-bd) picture,
-html.auth-dark:not(.auth-dark-bd) .auth-sb {
-    filter: hue-rotate(180deg) invert(1) contrast(1.25);
-}
-
-html.auth-dark:not(.auth-dark-bd) .auth-sb img {
-    filter: none;
-}
-
-html.auth-dark.auth-dark-bd::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 2147479000;
-    pointer-events: none;
-    -webkit-backdrop-filter: invert(.9) hue-rotate(180deg);
-    backdrop-filter: invert(.9) hue-rotate(180deg);
-}
-
-/* Symbol und Beschriftung des Umschalters je nach Modus */
-.auth-sb-dm-sun, .auth-sb-dm-light { display: none; }
-html.auth-dark .auth-sb-dm-sun, html.auth-dark .auth-sb-dm-light { display: inline-flex; }
-html.auth-dark .auth-sb-dm-moon, html.auth-dark .auth-sb-dm-dark { display: none; }
+/* Dark Mode: Symbol und Beschriftung des Umschalters je nach Modus (nur Mond bzw. nur Sonne).
+   Die eigentlichen Dunkel-Farben erzeugt darktheme.php automatisch aus dem CSS der Seite. */
+#authSbDarkMode .auth-sb-dm-sun,
+#authSbDarkMode .auth-sb-dm-light { display: none; }
+html.auth-dark #authSbDarkMode .auth-sb-dm-sun { display: inline-flex; }
+html.auth-dark #authSbDarkMode .auth-sb-dm-light { display: inline; }
+html.auth-dark #authSbDarkMode .auth-sb-dm-moon,
+html.auth-dark #authSbDarkMode .auth-sb-dm-dark { display: none; }

@@ -32,9 +32,7 @@ if (!function_exists('auth_darkmode_head')) {
         $emitted = true;
 
         return '<style>' . auth_design_system_read('darkmode.css') . '</style>'
-            . '<script>try{var d=document.documentElement,u=navigator.userAgent;'
-            . 'if(/iPhone|iPad|iPod/.test(u)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)){d.classList.add("auth-dark-bd");}'
-            . 'if(localStorage.getItem("auth_darkmode")==="1"){d.classList.add("auth-dark");}}catch(e){}</script>';
+            . '<script>try{if(localStorage.getItem("auth_darkmode")==="1"){document.documentElement.classList.add("auth-dark");}}catch(e){}</script>';
     }
 }
 
