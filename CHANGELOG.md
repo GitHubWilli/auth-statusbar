@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.0
+
+- `auth-pages.css`: Verwaltungsseiten (Konfiguration, Profil, Bereiche ...) laufen am Handy nicht mehr ueber die Bildschirmbreite (Formular-Grid `minmax(0,1fr)`, `select`/`textarea` wie Eingabefelder 100 % breit, 44 px hoch); bei Design "dasda" sind Karten, Buttons und Felder dieser Seiten eckig wie die Hauptseiten.
+
 ## v3.0.0
 
 - **Echtes Dark Theme** statt Filter/Overlay: `src/darktheme.php` leitet beim Ausliefern jeder HTML-Seite (Output-Buffer, `auth_darktheme_start()`) aus dem vorhandenen CSS (style-Bloecke, lokale Stylesheets, statische style-Attribute) automatisch Dunkel-Regeln unter `html.auth-dark` ab (Farben nach Rolle Hintergrund/Text/Rahmen umgerechnet, Farbton bleibt; Ergebnis je CSS-Stand gecacht). Keine Laufzeit-Filter mehr, dadurch flott.

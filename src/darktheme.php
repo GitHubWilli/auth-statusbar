@@ -87,7 +87,7 @@ if (!function_exists('auth_darktheme_build')) {
         $inlineKeys = array_keys($inline);
         sort($inlineKeys);
 
-        $key = md5($source . "\0" . implode("\0", $inlineKeys) . "\0v5");
+        $key = md5($source . "\0" . implode("\0", $inlineKeys) . "\0v6");
         $cacheFile = sys_get_temp_dir() . '/auth-darktheme-' . $key . '.css';
         if (is_file($cacheFile)) {
             return (string) file_get_contents($cacheFile);
