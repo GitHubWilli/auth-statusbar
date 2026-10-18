@@ -443,6 +443,10 @@
 
 /* ===== Mobil: 44-px-Tippflächen, 16 px Schrift (kein Auto-Zoom auf dem iPhone) ===== */
 @media (max-width: 768px) {
+    .btn {
+        min-height: var(--tap-min);
+    }
+
     .btn-icon {
         min-width: var(--tap-min);
         min-height: var(--tap-min);

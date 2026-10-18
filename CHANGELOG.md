@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.1
+
+- Mobil (<= 768 px): `.btn` mindestens 44 px hoch (`--tap-min`).
+
 ## v3.1.0
 
 - `auth-pages.css`: Verwaltungsseiten (Konfiguration, Profil, Bereiche ...) laufen am Handy nicht mehr ueber die Bildschirmbreite (Formular-Grid `minmax(0,1fr)`, `select`/`textarea` wie Eingabefelder 100 % breit, 44 px hoch); bei Design "dasda" sind Karten, Buttons und Felder dieser Seiten eckig wie die Hauptseiten.
