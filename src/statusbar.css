@@ -279,6 +279,24 @@
     color: #fca5a5;
 }
 
+/* Menue-Eintraege immer einheitlich (auch wenn die Seite Buttons farbig gestaltet, z.B. blaue Primaer-Buttons) */
+.auth-sb-menu__panel .auth-sb__link,
+.auth-sb-menu__panel .auth-sb__link:focus {
+    background: transparent !important;
+    color: var(--auth-sb-fg) !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.auth-sb-menu__panel .auth-sb__link:hover,
+.auth-sb-menu__panel .auth-sb__link:focus-visible {
+    background: var(--auth-sb-hover) !important;
+}
+
+.auth-sb-menu__panel .auth-sb-menu__logout .auth-sb__link {
+    color: #fca5a5 !important;
+}
+
 /* Platzreservierung, per Inline-Script auf <body> gesetzt */
 body.auth-sb-space-bottom {
     padding-bottom: var(--auth-sb-h) !important;
