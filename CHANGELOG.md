@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.2.1
+
+- `.ds-fab`: kein reservierter Platz mehr unter der Liste - der Button schwebt ueber der Liste (mobil wie am Desktop), die Liste reicht bis zum unteren Rand.
+
 ## v3.2.0
 
 - Schwebender runder "+"-Button unten links (`.ds-fab`): Element mit `data-ds-fab="Beschriftung"` wird per `initFabs()` zum Button; Klick loest den Klick des urspruenglichen Elements aus, das Original wird ausgeblendet. Ersetzt die "+ Neu ..."-Buttons in den Listen aller Apps.

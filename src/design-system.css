@@ -623,10 +623,7 @@ body.ds-sorting * {
     pointer-events: none;
 }
 
-/* Platz, damit der Button den letzten Eintrag nicht verdeckt */
-body.ds-has-fab {
-    padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
-}
+/* Der Button schwebt ueber der Liste (mobil wie am Desktop); die Liste reicht bis zum unteren Rand */
 
 @media print {
     .ds-fab {
