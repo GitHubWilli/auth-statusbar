@@ -575,6 +575,40 @@
         return api;
     }
 
+    // Schwebender "+"-Button: jedes Element mit data-ds-fab="Beschriftung" (z.B. der bisherige "+ Neu ..."-Button)
+    // bekommt unten links einen runden Button; ein Klick loest den Klick des urspruenglichen Elements aus
+    // (so bleiben alle vorhandenen Handler, Tastenkuerzel und Anker erhalten). Das Original wird ausgeblendet.
+    function initFabs() {
+        Array.prototype.forEach.call(document.querySelectorAll('[data-ds-fab]'), function (src) {
+            if (src.__dsFab) return;
+            var label = src.getAttribute('data-ds-fab') || src.getAttribute('title') || (src.textContent || '').replace(/^\s*\+\s*/, '').trim() || 'Neu';
+            var fab = document.createElement('button');
+            fab.type = 'button';
+            fab.className = 'ds-fab';
+            fab.title = src.getAttribute('title') || label;
+            fab.setAttribute('aria-label', label);
+            fab.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5v15M4.5 12h15"/></svg>';
+            fab.addEventListener('click', function () { src.click(); });
+            function sync() {
+                fab.hidden = src.hidden || src.disabled || !src.isConnected;
+            }
+            sync();
+            if (window.MutationObserver) {
+                new MutationObserver(sync).observe(src, { attributes: true, attributeFilter: ['hidden', 'disabled'] });
+            }
+            src.style.display = 'none';
+            src.__dsFab = fab;
+            document.body.appendChild(fab);
+            document.body.classList.add('ds-has-fab');
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFabs);
+    } else {
+        initFabs();
+    }
+    global.initFabs = initFabs;
+
     global.makeSortable = makeSortable;
     global.moveArrayItem = moveArrayItem;
     global.createSortHandle = createSortHandle;

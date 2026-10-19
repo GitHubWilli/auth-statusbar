@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.2.0
+
+- Schwebender runder "+"-Button unten links (`.ds-fab`): Element mit `data-ds-fab="Beschriftung"` wird per `initFabs()` zum Button; Klick loest den Klick des urspruenglichen Elements aus, das Original wird ausgeblendet. Ersetzt die "+ Neu ..."-Buttons in den Listen aller Apps.
+
 ## v3.1.1
 
 - Mobil (<= 768 px): `.btn` mindestens 44 px hoch (`--tap-min`).
