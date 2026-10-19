@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.2.2
+
+- `.ds-fab` sitzt unten rechts (statt unten links).
+
 ## v3.2.1
 
 - `.ds-fab`: kein reservierter Platz mehr unter der Liste - der Button schwebt ueber der Liste (mobil wie am Desktop), die Liste reicht bis zum unteren Rand.

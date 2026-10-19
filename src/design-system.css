@@ -571,10 +571,10 @@ body.ds-sorting * {
     border: 0;
 }
 
-/* ===== Schwebender "+"-Button unten links (statt "+ Neu ..."-Button in der Kopfzeile) ===== */
+/* ===== Schwebender "+"-Button unten rechts (statt "+ Neu ..."-Button in der Kopfzeile) ===== */
 .ds-fab {
     position: fixed;
-    left: 16px;
+    right: 16px;
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     z-index: 900;
     width: 60px;
