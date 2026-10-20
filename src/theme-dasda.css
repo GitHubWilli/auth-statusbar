@@ -172,3 +172,12 @@ html.theme-dasda .toast {
     border-radius: 0;
     font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* ---------- Schwebende Buttons (unten links/rechts) bleiben immer rund ---------- */
+html.theme-dasda .ds-fab,
+html.theme-dasda .notes-fab,
+html.theme-dasda .emergency-fab,
+html.theme-dasda .wide-toggle,
+html.theme-dasda [class*="-fab"] {
+    border-radius: 50% !important;
+}
