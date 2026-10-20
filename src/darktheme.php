@@ -25,10 +25,44 @@ if (!function_exists('auth_darktheme_start')) {
     }
 }
 
+if (!function_exists('auth_dasda_theme_apply')) {
+    /**
+     * Zentrales Theme "DAS DA Homepage" (einziges Theme aller Anwendungen): Klasse theme-dasda am <html>,
+     * Schrift und theme-dasda.css vor </head>. Idempotent.
+     */
+    function auth_dasda_theme_apply(string $html): string
+    {
+        if (stripos($html, 'id="auth-dasda-theme"') !== false || !preg_match('~<html\b[^>]*>~i', $html)) {
+            return $html;
+        }
+        $css = is_file(__DIR__ . '/theme-dasda.css') ? (string) file_get_contents(__DIR__ . '/theme-dasda.css') : '';
+        $html = (string) preg_replace_callback('~<html\b([^>]*)>~i', static function (array $m): string {
+            $attrs = $m[1];
+            if (preg_match('~\bclass=(["\'])(.*?)\1~i', $attrs)) {
+                if (!preg_match('~\btheme-dasda\b~', $attrs)) {
+                    $attrs = (string) preg_replace('~\bclass=(["\'])(.*?)\1~i', 'class=$1$2 theme-dasda$1', $attrs, 1);
+                }
+            } else {
+                $attrs .= ' class="theme-dasda"';
+            }
+            return '<html' . $attrs . '>';
+        }, $html, 1);
+
+        $inject = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">'
+            . '<style id="auth-dasda-theme">' . $css . '</style>';
+
+        return (string) preg_replace('~</head>~i', str_replace(['\\', '$'], ['\\\\', '\\$'], $inject) . '</head>', $html, 1);
+    }
+}
+
 if (!function_exists('auth_darktheme_buffer')) {
     function auth_darktheme_buffer(string $out, int $phase = 0): string
     {
-        if (strlen($out) < 300 || stripos($out, '</head>') === false || stripos($out, 'id="auth-dark-theme"') !== false) {
+        if (strlen($out) < 300 || stripos($out, '</head>') === false) {
+            return $out;
+        }
+        $out = auth_dasda_theme_apply($out);
+        if (stripos($out, 'id="auth-dark-theme"') !== false) {
             return $out;
         }
         try {

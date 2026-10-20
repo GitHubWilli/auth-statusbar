@@ -1,0 +1,174 @@
+/*
+ * Zentrales Gesamtdesign "DAS DA Homepage" fuer ALLE Webanwendungen (einziges Theme).
+ * Wird von auth_darktheme_buffer() (darktheme.php) in jede ausgelieferte HTML-Seite eingefuegt
+ * und setzt dabei die Klasse theme-dasda am <html>. Anwendungsspezifische Feinheiten stehen
+ * weiterhin in der design-dasda.css der jeweiligen Anwendung.
+ */
+
+/* ---------- Eckig ueberall: Variablen, Statusleiste, Anmeldeseiten, gaengige Komponenten ---------- */
+html.theme-dasda {
+    --radius-sm: 0;
+    --radius-md: 0;
+    --radius-lg: 0;
+    --radius-xl: 0;
+}
+
+html.theme-dasda [class*="auth-sb"],
+html.theme-dasda .card,
+html.theme-dasda .panel,
+html.theme-dasda .flash,
+html.theme-dasda .button,
+html.theme-dasda button,
+html.theme-dasda [class*="btn"],
+html.theme-dasda [class*="button"],
+html.theme-dasda [class*="card"],
+html.theme-dasda [class*="modal"],
+html.theme-dasda [class*="dialog"],
+html.theme-dasda [class*="popup"],
+html.theme-dasda [class*="dropdown"],
+html.theme-dasda [class*="toast"],
+html.theme-dasda [class*="badge"],
+html.theme-dasda [class*="pill"],
+html.theme-dasda [class*="chip"],
+html.theme-dasda [class*="panel"],
+html.theme-dasda [class*="tab-"],
+html.theme-dasda .guest-nav a,
+html.theme-dasda input:not([type="radio"]):not([type="checkbox"]),
+html.theme-dasda select,
+html.theme-dasda textarea {
+    border-radius: 0 !important;
+}
+
+
+html.theme-dasda body {
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f3f5f7;
+    color: #333333;
+}
+
+/* ---------- Kopfband ---------- */
+html.theme-dasda .ds-page-header {
+    background: #1a1a1a;
+    border-radius: 0;
+    padding: 18px 20px 34px;
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+    align-items: flex-start;
+}
+
+html.theme-dasda .ds-page-header h1 {
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+html.theme-dasda .ds-page-header h1::after {
+    content: '';
+    display: block;
+    width: 72px;
+    height: 4px;
+    background: #009EE0;
+    margin-top: 10px;
+}
+
+/* ---------- Karten ---------- */
+html.theme-dasda .ds-card {
+    border-radius: 0;
+    background: #ffffff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+html.theme-dasda .gruppe-kopf {
+    background: #1a1a1a;
+    border-bottom: none;
+    border-left: 4px solid #009EE0;
+}
+
+html.theme-dasda .gruppe-kopf .toggle {
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+html.theme-dasda .gruppe-kopf .btn-icon,
+html.theme-dasda .gruppe-kopf .ds-sort-handle {
+    color: #ffffff;
+}
+
+html.theme-dasda .gruppe-kopf .btn-icon:hover,
+html.theme-dasda .gruppe-kopf .ds-sort-handle:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+html.theme-dasda .ds-table th {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 0.8em;
+    color: #1a1a1a;
+}
+
+/* ---------- Buttons und Eingaben ---------- */
+html.theme-dasda .btn,
+html.theme-dasda .btn-icon,
+html.theme-dasda .design-wahl,
+html.theme-dasda .ds-sort-handle {
+    border-radius: 0;
+}
+
+html.theme-dasda .btn,
+html.theme-dasda .design-wahl,
+html.theme-dasda button {
+    font-family: inherit;
+}
+
+html.theme-dasda .btn {
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: none;
+}
+
+html.theme-dasda .btn:hover {
+    box-shadow: none;
+}
+
+html.theme-dasda input:not([type="radio"]):not([type="checkbox"]),
+html.theme-dasda select,
+html.theme-dasda textarea {
+    border-radius: 0 !important;
+    font-family: inherit;
+}
+
+/* ---------- Dialoge und Meldungen ---------- */
+html.theme-dasda .modal {
+    background: rgba(26, 26, 26, 0.6);
+}
+
+html.theme-dasda .modal-content {
+    border-radius: 0;
+    border-top: 6px solid #009EE0;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html.theme-dasda .modal-header {
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #1a1a1a;
+    border-bottom: none;
+}
+
+html.theme-dasda .modal-header::after {
+    content: '';
+    display: block;
+    width: 56px;
+    height: 4px;
+    background: #009EE0;
+    margin-top: 8px;
+}
+
+html.theme-dasda .toast {
+    border-radius: 0;
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
