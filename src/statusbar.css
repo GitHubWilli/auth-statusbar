@@ -346,3 +346,16 @@ body.auth-sb-space-top {
         padding-top: 0 !important;
     }
 }
+
+.auth-sb-menu__section {
+    padding: 6px 10px 2px;
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--auth-sb-muted, var(--auth-sb-fg));
+    opacity: .7;
+}
+
+.auth-sb-menu__panel .auth-sb-menu__danger .auth-sb__link {
+    color: #fca5a5 !important;
+}

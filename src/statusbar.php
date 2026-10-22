@@ -246,9 +246,41 @@ if (!function_exists('auth_statusbar_menu')) {
             $head .= '</div>';
         }
 
-        $extra = '';
+        // Eintraege in feste Abschnitte einordnen (Seite, Navigation, Verwaltung); Ueberschriften nur bei mehr als einem Abschnitt.
+        // Abschnitt: explizit ueber 'section', sonst abgeleitet (Zurueck/Teil-App-Links = nav, Client/Konfiguration = admin).
+        $sectionLabels = ['page' => 'Seite', 'nav' => 'Navigation', 'admin' => 'Verwaltung'];
+        $groups = ['page' => '', 'nav' => '', 'admin' => ''];
         foreach ($menuItems as $item) {
-            $extra .= auth_statusbar_top_item($item);
+            $section = (string) ($item['section'] ?? '');
+            if (!isset($sectionLabels[$section])) {
+                $icon = (string) ($item['icon'] ?? '');
+                $id = (string) ($item['id'] ?? '');
+                if ($icon === 'arrow-left' || strpos($id, 'authNav') === 0) {
+                    $section = 'nav';
+                } elseif ($icon === 'gear' || ($icon === 'tag' && ($item['type'] ?? '') !== 'link') || $icon === 'folder') {
+                    $section = 'admin';
+                } else {
+                    $section = 'page';
+                }
+            }
+            $html = auth_statusbar_top_item($item);
+            if ($html !== '' && !empty($item['danger'])) {
+                $html = '<span class="auth-sb-menu__danger">' . $html . '</span>';
+            }
+            // Gefaehrliche Aktionen ans Ende des Seiten-Abschnitts, abgesetzt
+            $groups[$section] .= $html;
+        }
+        $used = array_keys(array_filter($groups, static function ($h) { return $h !== ''; }));
+        $extra = '';
+        foreach ($used as $i => $key) {
+            if (count($used) > 1) {
+                $extra .= ($i > 0 ? '<div class="auth-sb-menu__sep" role="separator"></div>' : '')
+                    . '<div class="auth-sb-menu__section">' . auth_statusbar_e($sectionLabels[$key]) . '</div>';
+            }
+            $extra .= $groups[$key];
+        }
+        if ($extra !== '') {
+            $extra .= '<div class="auth-sb-menu__sep" role="separator"></div>';
         }
 
         // Umschalter Dark/Light Mode: in jedem Menue (auch oeffentliche Ansichten), Wahl wird je Geraet gemerkt
